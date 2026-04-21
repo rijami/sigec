@@ -1,0 +1,271 @@
+<?php
+$flash = $this->flashMessenger();
+$notificaciones = [
+    'success' => array_merge($flash->getSuccessMessages(), $flash->getCurrentSuccessMessages()),
+    'error' => array_merge($flash->getErrorMessages(), $flash->getCurrentErrorMessages()),
+    'alert' => array_merge($flash->getMessages(), $flash->getCurrentMessages()),
+    'information' => array_merge($flash->getInfoMessages(), $flash->getCurrentInfoMessages()),
+    'warning' => array_merge($flash->getWarningMessages(), $flash->getCurrentWarningMessages()),
+];
+$flash->clearCurrentMessages('default');
+$flash->clearCurrentMessages('info');
+$flash->clearCurrentMessages('success');
+$flash->clearCurrentMessages('warning');
+$flash->clearCurrentMessages('error');
+$mostrarMensajes = '';
+foreach (array_filter($notificaciones) as $tipo => $mensajes) {
+    $tipoToastr = 'info';
+    $titulo = 'SwApp';
+    switch ($tipo) {
+        case 'success':
+            $titulo = ' OK ';
+            $tipoToastr = 'success';
+            break;
+        case 'error':
+            $titulo = ' ERROR ';
+            $tipoToastr = 'error';
+            break;
+        case 'alert':
+            $titulo = ' ALERTA ';
+            $tipoToastr = 'warning';
+            break;
+        case 'information':
+            $titulo = ' INFORMACION ';
+            $tipoToastr = 'info';
+            break;
+        case 'warning':
+            $titulo = ' PRECAUCION ';
+            $tipoToastr = 'warning';
+            break;
+    }
+    foreach ($mensajes as $mensaje) {
+        $mostrarMensajes .= "toastr.$tipoToastr('$mensaje', '$titulo', {
+                closeButton: true,
+                debug: false,
+                newestOnTop: false,
+                progressBar: true,
+                positionClass: 'toast-top-full-width',
+                preventDuplicates: false,
+                onclick: null,
+                showDuration: '300',
+                hideDuration: '1000',
+                timeOut: '8000',
+                extendedTimeOut: '1000',
+                showEasing: 'swing',
+                hideEasing: 'linear',
+                showMethod: 'fadeIn',
+                hideMethod: 'fadeOut'
+            }); ";
+    }
+}
+
+$title = 'Indicadores';
+$this->headTitle($title);
+$this->headLink()->prependStylesheet($this->basePath('/css/select2.min.css'));
+
+// AQUÍ ESTÁ EL CAMBIO IMPORTANTE EN EL JAVASCRIPT
+$this->headScript()->prependScript('
+            // Variable global para controlar el cierre
+            window.cierreProgramado = false;
+
+            $(document).ajaxStop($.unblockUI);
+            $(document).ready(function() {
+                $("#tabla").DataTable({
+                    responsive: false,
+                    iDisplayLength: 5,
+                    sPaginationType: "full_numbers",
+                    oLanguage: {
+                        sLengthMenu: "Mostrar: _MENU_ registros por pagina",
+                        sZeroRecords: "NO SE HA ENCONTRADO INFORMACION",
+                        sInfo: "Mostrando <b>_START_</b> a <b>_END_</b> registros <br>TOTAL REGISTROS: <b>_TOTAL_</b> Registros</b>",
+                        sInfoEmpty: "Mostrando 0 A 0 registros",
+                        sInfoFiltered: "(Filtrados de un total de <b>_MAX_</b> registros)",
+                        sLoadingRecords: "CARGANDO...",
+                        sProcessing: "EN PROCESO...",
+                        sSearch: "Buscar:",
+                        sEmptyTable: "NO HAY INFORMACION DISPONIBLE PARA LA TABLA",
+                        oPaginate: {
+                            sFirst: "<i class=\'fa fa-fast-backward\' aria-hidden=\'true\' title=\'Inicio\'></i>",
+                            sPrevious: "<i class=\'fa fa-step-backward\' aria-hidden=\'true\' title=\'Anterior\'></i>",
+                            sNext: "<i class=\'fa fa-step-forward\' aria-hidden=\'true\' title=\'Siguiente\'></i>",
+                            sLast: "<i class=\'fa fa-fast-forward\' aria-hidden=\'true\' title=\'Fin\'></i>",
+                        }
+                    },
+                    aaSorting: [[0, "desc"]]
+                });
+
+                // Lógica corregida para el cierre del modal
+                $("#modalFormulario").on("hide.bs.modal", function (e) {
+                    // Si el cierre viene del AJAX (guardado exitoso), dejar pasar
+                    if (window.cierreProgramado === true) {
+                        return true;
+                    }
+
+                    // Si es manual, evitar el cierre y preguntar
+                    e.preventDefault();
+                    
+                    Swal.fire({
+                        title: "&iquest;DESEA CERRAR EL FORMULARIO?",
+                        text: "Se perderán los datos no guardados.",
+                        icon: "question",
+                        showCancelButton: true,
+                        confirmButtonText: "Si, cerrar",
+                        cancelButtonText: "No, continuar",
+                        allowOutsideClick: false
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            // Autorizar cierre y cerrar manualmente
+                            window.cierreProgramado = true;
+                            $("#modalFormulario").modal("hide");
+                        }
+                    });
+                });
+
+                // Resetear la variable cuando el modal esté completamente cerrado
+                $("#modalFormulario").on("hidden.bs.modal", function () {
+                    window.cierreProgramado = false;
+                });
+
+                ' . $mostrarMensajes . '
+            });', 'text/javascript', array('noescape' => true))
+    ->prependFile($this->basePath('/js/sistema/indicadores.js'))
+    ->prependFile($this->basePath('/js/select2.min.js'));
+?>
+<div class="container bg-white rounded-lg shadow-sm p-4 border">
+    <div class="row">
+        <div class="col-md-8 col-sm-8">
+            <h1 class="display-5">Indicadores</h1>
+            <p>En esta seccion usted puede gestionar todo lo relacionado con las <b>Indicadores</b> registrados
+                en el sistema</p>
+            <hr>
+            <?php if ($rolesUsuario['rol'] === 'SUPER_ADMINISTRADOR' || $rolesUsuario['rol'] === 'ADMINISTRADOR') { ?>
+                <button type="button" id="btnRegistrar" onclick="verRegistrarIndicador()" class="btn btn-success"
+                    title="REGISTRAR UN NUEVO INDICADOR"><i class="fas fa-plus-circle"></i> Registrar
+                    Indicador</button>
+                <button type="button" id="btnRegistrar" onclick="verActivacion()" class="btn btn-primary"
+                    title="ACTIVAR INDICADORES"><i class="fas fa-check"></i> Activar
+                    Indicadores</button>
+                <button type="button" id="btnRegistrar" onclick="verExportar()" class="btn btn-warning"
+                    title="EXPORTAR INDICADORES"><i class="fas fa-file"></i> Exportar
+                    Indicadores</button>
+            <?php } ?>
+        </div>
+        <div class="col-md-4 col-sm-4 text-center d-none d-sm-block">
+            <i class="fas fa-chart-line fa-6x border rounded-lg shadow-sm p-3 text-primary"
+                style="color: #eede00 !important;"></i>
+        </div>
+    </div>
+</div> <br>
+<div class="container bg-white rounded-lg">
+    <div class="row border rounded-lg shadow-sm p-3">
+        <div class="table-responsive" style="font-size: 11px">
+            <h5 class="text-primary">Indicadores Encontrados ( <small class="text-danger">INDICADORES: <b
+                        id="contIndicadores">0</b></small> )</h5>
+            <hr>
+            <table id="tabla" class="table table-striped table-bordered table-hover table-sm" style="width: 150%">
+                <thead class="thead-dark">
+                    <tr>
+                        <th scope="col" class="text-center align-middle" style="width: 3%">ID</th>
+                        <th scope="col" class="text-center align-middle" style="width: 5%"><i
+                                class="fas fa-cog fa-spin"></i></th>
+                        <th scope="col" class="text-center align-middle">CODIGO</th>
+                        <th scope="col" class="text-center align-middle" style="width: 10%">PROCESO</th>
+                        <th scope="col" class="text-center align-middle">COORDINACIÓN</th>
+                        <th scope="col" class="text-center align-middle" style="width: 20%">INDICADOR</th>
+                        <!-- <th scope="col" class="text-center align-middle">OBJETIVO</th>
+ -->
+                        <th scope="col" class="text-center align-middle">PERIODICIDAD</th>
+                        <th scope="col" class="text-center align-middle">FUENTE INFORMACIÓN</th>
+                        <th scope="col" class="text-center align-middle">META</th>
+                        <th scope="col" class="text-center align-middle">TIPO INDICADOR</th>
+                        <th scope="col" class="text-center align-middle">SENTIDO</th>
+                        <th scope="col" class="text-center align-middle">ESTADO</th>
+                        <th scope="col" class="text-center align-middle">REGISTRADO POR</th>
+                        <th scope="col" class="text-center align-middle">FECHA REGISTRO</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
+                    foreach ($this->indicadores as $indicador) {
+                        echo '<tr>';
+                        echo '<td class="text-center" scope="row">' . $indicador['id_indicador'] . '</td>';
+                        echo '<td class="text-center align-middle">';
+                        echo '&nbsp;&nbsp;<a href="javascript:verDetalleIndicador(' . $indicador['id_indicador'] . ')" title="VER DETALLE DE ESTE INDICADOR"><i class="fas fa-eye" style="color: #837a06"></i></a>';
+                        // Se incluye 'En proceso' para que aparezcan las opciones correctamente
+                        if ($indicador['estado'] !== 'Eliminado') {
+                            if ($rolesUsuario['rol'] === 'SUPER_ADMINISTRADOR' || $rolesUsuario['rol'] === 'ADMINISTRADOR') {
+                                echo '&nbsp;&nbsp;<a href="javascript:verEditarIndicador(' . $indicador['id_indicador'] . ')" title="ACTUALIZAR ESTE INDICADOR"><i class="fas fa-edit" style="color: #837a06"></i></a>';
+                                echo '&nbsp;&nbsp;<a href="javascript:verEliminarIndicador(' . $indicador['id_indicador'] . ')" title="ELIMINAR ESTE INDICADOR"><i style="color:red" class="fas fa-times-circle"></i></a>';
+                                echo '&nbsp;&nbsp;<a href="../resultados/index?id_indicador=' . $indicador['id_indicador'] . '" title="IR A LOS RESULTADOS DE ESTE INDICADOR"><i class="fas fa-flag" style="color: #837a06"></i></a>';
+                            } else {
+                                echo '&nbsp;&nbsp;<a href="../resultados/index?id_indicador=' . $indicador['id_indicador'] . '" title="IR A LOS RESULTADOS DE ESTE INDICADOR"><i class="fas fa-flag" style="color: #837a06"></i></a>';
+                            }
+                        }
+                        echo '</td>';
+                        echo '<td class="text-center align-middle font-weight-bold">' . $indicador['codigo'] . '</td>';
+                        echo '<td class="text-center align-middle">' . ($indicador['Proceso'] ?? 'N/A') . '</td>';
+                        echo '<td class="text-center align-middle">' . ($indicador['Coordinacion'] ?? 'N/A') . '</td>';
+                        echo '<td class="text-center align-middle text-primary">' . $indicador['nombre_indicador'] . '</td>';
+                        //echo '<td class="text-center align-middle">' . ($indicador['objetivo'] ?? 'N/A') . '</td>';
+                        echo '<td class="text-center align-middle">' . ($indicador['periodicidad'] ?? 'N/A') . '</td>';
+                        echo '<td class="text-center align-middle">' . ($indicador['fuente_informacion'] ?? 'N/A') . '</td>';
+                        echo '<td class="text-center align-middle">' . ($indicador['meta'] ?? 'N/A') . '</td>';
+                        echo '<td class="text-center align-middle">' . ($indicador['TIPO_INDICADOR'] ?? 'N/A') . '</td>';
+                        echo '<td class="text-center align-middle">' . ($indicador['SENTIDO'] ?? 'N/A') . '</td>';
+                        echo '<td class="text-center align-middle font-weight-bold">' . ($indicador['estado'] ?? 'N/A') . '</td>';
+                        echo '<td class="text-center align-middle">' . ($indicador['registradopor'] ?? 'N/A') . '</td>';
+                        echo '<td class="text-center align-middle">' . $indicador['fechaRegistro'] . '</td>';
+                        echo '</tr>';
+                    }
+                    ?>
+                </tbody>
+                <tfoot></tfoot>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div id="msgBloqueo" style="display: none;">
+    SU SOLICITUD ESTA SIENDO PROCESADA, POR FAVOR ESPERE...
+</div>
+
+<div class="modal fade" id="modalFormulario" data-backdrop="static" tabindex="-1" aria-labelledby="lbModalFormulario"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-info text-light">
+                <h5 class="modal-title" id="lbModalFormulario">Formulario</h5>
+                <button type="button" class="close text-light" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div id="divContenido"></div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="modalFormularioAux" data-backdrop="static" tabindex="-1"
+    aria-labelledby="lbModalFormulario2" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-info text-light">
+                <h5 class="modal-title" id="lbModalFormularioAux">Formulario</h5>
+                <button type="button" class="close text-light" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div id="divContenidoAux"></div>
+        </div>
+    </div>
+</div>
+<?php
+echo '<script>';
+echo '$("#contIndicadores").html("' . number_format(count($this->indicadores)) . '");';
+echo '</script>';
+?>
+<script>
+    // Mover los modales al body para evitar el error de aria-hidden
+    $(document).ready(function () {
+        $('#modalFormulario').appendTo("body");
+        $('#modalFormularioAux').appendTo("body");
+    });
+</script>

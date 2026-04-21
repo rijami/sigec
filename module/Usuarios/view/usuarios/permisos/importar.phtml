@@ -1,0 +1,63 @@
+<?php
+$this->formImportarRol->prepare();
+echo $this->form()->openTag($this->formImportarRol);
+?>
+<div class="modal-body ui-front" style="max-height: 450px; overflow-y: auto;">
+    <div class="container-fluid">
+        <fieldset>
+            <legend>Informacion del Rol</legend> <hr>
+            <div class="form-row">
+                <div class="form-group col-md-3 col-sm-3">
+                    <?= $this->formLabel($this->formImportarRol->get('idRol')) ?>
+                    <div class="input-group input-group-sm">
+                        <?= $this->formElement($this->formImportarRol->get('idRol')) ?>
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i class="fas fa-key"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group col-md-6 col-sm-6">
+                    <label for="rol">Rol</label>
+                    <div class="input-group input-group-sm">
+                        <input type="text" id="rol" name="rol" value="<?= $infoRol['rol'] ?>" class="form-control" readonly>
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i class="fas fa-address-card"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group col-md-3 col-sm-3">
+                    <label for="estado">Estado</label>
+                    <div class="input-group input-group-sm">
+                        <input type="text" id="estado" name="estado" value="<?= $infoRol['estado'] ?>" class="form-control" style="font-weight: bold" readonly>
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i class="fas fa-user-tie"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </fieldset> <hr>
+        <fieldset>
+            <legend>Informacion del Rol A Importar</legend> <hr>
+            <div class="form-group col-md-12 col-sm-12">
+                <?= $this->formLabel($this->formImportarRol->get('idRolAux')) ?>
+                <div class="input-group input-group-sm">
+                    <?= $this->formElement($this->formImportarRol->get('idRolAux')) ?>
+                    <div class="input-group-append">
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+        <div id="divInfoRecursos"></div>
+    </div>
+</div>
+<div class="modal-footer">
+    <button type="submit" id="btnRegistrar" class="btn btn-primary" title="IMPORTAR RECURSO  DEL ROL"><i class="fas fa-download"></i> Importar Recurso del Rol</button>
+    <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="far fa-times-circle"></i> Cerrar</button>
+</div>
+<?= $this->form()->closeTag(); ?>

@@ -1,0 +1,62 @@
+<?php
+$form->prepare();
+echo $this->form()->openTag($form);
+?>
+<div class="modal-body" id="formularioReg">
+    <div style="padding: 10px" class="container-fluid">
+        <fieldset>
+            <fieldset>
+            <legend>Informacion del Recurso RBAC</legend>
+            <hr>
+            <div class="form-row">
+                <div class="form-group col-md-8 col-sm-12">
+                    <?= $this->formLabel($form->get('recurso')) ?>
+                    <div class="input-group">  
+                        <?= $this->formElement($form->get('recurso')) ?>
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i class="fa fa-folder-open"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>                
+                <div class="form-group col-md-4 col-sm-12">
+                    <?= $this->formLabel($form->get('metodo')) ?>
+                    <div class="input-group">
+                        <?= $this->formElement($form->get('metodo')) ?>
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i class="fa fa-check-square"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </fieldset>   
+        </fieldset><hr>
+        <fieldset>
+            <legend>Informacion de Registro</legend> 
+            <hr>
+            <div class="form-row">
+                <div class="form-group col-md-5 col-sm-12 text-right">
+                    <?= $this->formLabel($form->get('idRecurso')) ?>
+                </div>
+                <div class="form-group col-md-3 col-sm-12">
+                    <div class="input-group">
+                        <?= $this->formElement($form->get('idRecurso')) ?>
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i class="fas fa-user"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div> 
+        </fieldset>
+    </div>
+</div>
+<div class="modal-footer" style=" padding: 20px">
+    <button type="submit" class="btn btn-success" title="ACTUALIZAR RECURSO"><i class="fas fa-save"></i> Actualizar Recurso</button>
+    <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fas fa-times"></i> Cerrar</button>
+</div>
+<?= $this->form()->closeTag(); ?>

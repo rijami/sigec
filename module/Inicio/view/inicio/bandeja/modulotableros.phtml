@@ -1,0 +1,175 @@
+<?php
+//--------- CARGAR MENSAJES DE ALERTA ------------------------------------------
+$flash = $this->flashMessenger();
+$notificaciones = [
+    'success' => array_merge($flash->getSuccessMessages(), $flash->getCurrentSuccessMessages()),
+    'error' => array_merge($flash->getErrorMessages(), $flash->getCurrentErrorMessages()),
+    'alert' => array_merge($flash->getMessages(), $flash->getCurrentMessages()),
+    'information' => array_merge($flash->getInfoMessages(), $flash->getCurrentInfoMessages()),
+    'warning' => array_merge($flash->getWarningMessages(), $flash->getCurrentWarningMessages()),
+];
+$flash->clearCurrentMessages('default');
+$flash->clearCurrentMessages('info');
+$flash->clearCurrentMessages('success');
+$flash->clearCurrentMessages('warning');
+$flash->clearCurrentMessages('error');
+$mostrarMensajes = '';
+foreach (array_filter($notificaciones) as $tipo => $mensajes) {
+    $tipoToastr = 'info';
+    $titulo = 'Josandro';
+    switch ($tipo) {
+        case 'success':
+            $titulo = ' OK ';
+            $tipoToastr = 'success';
+            break;
+        case 'error':
+            $titulo = ' ERROR ';
+            $tipoToastr = 'error';
+            break;
+        case 'alert':
+            $titulo = ' ALERTA ';
+            $tipoToastr = 'warning';
+            break;
+        case 'information':
+            $titulo = ' INFORMACION ';
+            $tipoToastr = 'info';
+            break;
+        case 'warning':
+            $titulo = ' PRECAUCION ';
+            $tipoToastr = 'warning';
+            break;
+    }
+    foreach ($mensajes as $mensaje) {
+        $mostrarMensajes .= "toastr.$tipoToastr('$mensaje', '$titulo', {
+                closeButton: true,
+                debug: false,
+                newestOnTop: false,
+                progressBar: true,
+                positionClass: 'toast-top-right',
+                preventDuplicates: true,
+                onclick: null,
+                showDuration: '300',
+                hideDuration: '1000',
+                timeOut: '10000',
+                extendedTimeOut: '10000',
+                showEasing: 'swing',
+                hideEasing: 'linear',
+                showMethod: 'fadeIn',
+                hideMethod: 'fadeOut'
+            }); ";
+    }
+}
+//------------------------------------------------------------------------------
+
+$title = 'Tableros';
+$this->headTitle($title);
+$this->headScript()->prependScript('
+            $(document).ajaxStop($.unblockUI);
+            $(document).ready(function() {
+                //------------------------------------------------------------------------------
+                // MANIPULACION DEL EVENTO DE CIERRE DEL MODAL
+                //------------------------------------------------------------------------------
+                $("#modalFormulario").on("hide.bs.modal", function (e) {
+                    Swal.fire({
+                        title: "DESEA CERRAR EL FORMULARIO ?",
+                        text: "",
+                        icon: "question",
+                        showCancelButton: true,
+                        confirmButtonText: "Si",
+                        cancelButtonText: "No",
+                        allowOutsideClick: false
+                    }).then((result) => {
+                        if (!result.isConfirmed) {
+                            $(this).modal("show");
+                        }
+                    });
+                });
+                //------------------------------------------------------------------------------
+                ' . $mostrarMensajes . '
+            });', 'text/javascript', array('noescape' => true))
+    ->prependFile($this->basePath('/js/sistema/bandejaEntrada.js'));
+?>
+<div class="container bg-white rounded-lg shadow-sm p-4 border">
+    <h3><i class="fas fa-chart-bar fa-lg bg-white rounded-lg shadow p-3 text-primary"
+            style="color: #eede00 !important"></i> &nbsp; MODULO DE TABLEROS
+        DE CONTROL</h3>
+    <?php if ($rolesUsuario['rol'] === 'SUPER_ADMINISTRADOR') { ?>
+        <hr>
+        <!-- BOTONES -->
+        <a href="<?= $this->url('dashboard/tableros', ['action' => 'index']) ?>" class="btn btn-success"
+            title="VOLVER AL LISTADO DE INDICADORES">
+            <i class="fas fa-clipboard"></i> Gestion de Tableros
+        </a>
+    <?php } ?>
+
+</div> <br>
+<div class="container bg-white">
+    <div class="border rounded-lg shadow-sm p-3">
+        <div class="row row-cols-1 row-cols-md-4">
+            <!-- < ?php if ($rolesUsuario['rol'] === 'SUPER_ADMINISTRADOR' || $rolesUsuario['rol'] === 'ADMINISTRADOR') { ?> -->
+            <?php
+            if (empty($tableros)) { ?>
+                <div class="col-md-4 col-sm-4 text-center">
+                    <img src="<?= $this->basePath('img/info.png'); ?>" class="rounded img-fluid" alt="Imagen"
+                        style="width: 70%; height: auto">
+                </div>
+                <div class="col-md-7 col-sm-7"> <br><br>
+                    <div class="alert alert-primary text-center text-uppercase" role="alert">
+                        <p class="font-weight-bold">
+                            NO SE HAN ENCONTRADO TABLEROS DE CONTROL ASIGNADOS A SU USUARIO
+                        </p>
+                    </div>
+                </div>
+            <?php } else {
+                foreach ($this->tableros as $tablero): ?>
+
+                    <div class="col mb-4">
+                        <div class="card h-100 border shadow-sm text-center d-flex justify-content-center align-items-center"
+                            onmouseover="$(this).removeClass('shadow-sm').addClass('shadow')"
+                            onmouseout="$(this).removeClass('shadow').addClass('shadow-sm')">
+                            <a href="<?= $this->url(
+                                'dashboard/visualizacion',
+                                ['action' => 'index'], // Parámetros de la ruta
+                                ['query' => ['idTablero' => $tablero['idTablero']]] // Esto genera el ?id_indicador=XX
+                            ) ?>" class="text-decoration-none hvr-float-shadow">
+
+                                <div class="card-body d-flex flex-column justify-content-center align-items-center">
+
+                                    <img src="<?= $this->basePath('img/grafic2.png'); ?>" class="rounded img-fluid" alt="Imagen"
+                                        style="width: 70%; height: auto">
+
+                                    <h5 class="text-dark m-0">
+                                        <?= $tablero['nombre'] ?>
+                                    </h5>
+
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                <?php endforeach;
+            } ?>
+
+
+        </div>
+    </div>
+</div>
+</div>
+
+<div id="msgBloqueo" style="display: none;">
+    SU SOLICITUD ESTA SIENDO PROCESADA, POR FAVOR ESPERE...
+</div>
+
+<div class="modal fade" id="modalFormulario" data-backdrop="static" tabindex="-1" aria-labelledby="lbModalFormulario"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-info text-light">
+                <h5 class="modal-title" id="lbModalFormulario">Formulario</h5>
+                <button type="button" class="close text-light" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div id="divContenido"></div>
+        </div>
+    </div>
+</div>

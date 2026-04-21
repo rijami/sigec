@@ -1,0 +1,40 @@
+<?php
+$this->formRecursosRbac->prepare();
+echo $this->form()->openTag($this->formRecursosRbac);
+?>
+<div class="modal-body ui-front" style="max-height: 450px; overflow-y: auto;">
+    <div class="container-fluid">
+        <fieldset>
+            <legend>Informacion del Recurso Rbac</legend> <hr>
+            <div class="form-row">
+                <div class="form-group col-md-12 col-sm-12">
+                    <?= $this->formLabel($this->formRecursosRbac->get('recurso')) ?>
+                    <div class="input-group" >  
+                        <?= $this->formElement($this->formRecursosRbac->get('recurso')) ?>
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i class="fas fa-user"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group col-md-12 col-sm-12">
+                    <?= $this->formLabel($this->formRecursosRbac->get('metodo')) ?>
+                    <div class="input-group">  
+                        <?= $this->formElement($this->formRecursosRbac->get('metodo')) ?>
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i class="fas fa-users"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+    </div>
+</div>
+<div class="modal-footer">
+    <button type="submit" class="btn btn-success" title="ASIGNAR ROL" ><i class="far fa-check-circle"></i>Asignar Recurso Rbac</button>
+    <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="far fa-times-circle"></i> Cerrar</button>
+</div>
+<?= $this->form()->closeTag(); ?>

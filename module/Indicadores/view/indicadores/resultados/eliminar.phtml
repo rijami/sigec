@@ -1,0 +1,63 @@
+<?php
+
+$this->formAvanceHistoria->prepare();
+
+
+$this->formAvanceHistoria->setAttribute('action', $this->url('indicadores/avances', ['action' => 'eliminar', 'query' => ['idAvance' => $this->idAvance]]));
+
+echo $this->form()->openTag($this->formAvanceHistoria);
+?>
+
+<div class="modal-body ui-front" style="max-height: 450px; overflow-y: auto;">
+    <div class="container-fluid">
+        <fieldset>
+            <legend>Eliminar Avance</legend><hr>
+            
+            
+            <?= $this->formElement($this->formAvanceHistoria->get('idAvance')) ?>
+            
+          
+            <div class="alert alert-danger text-center mb-4" role="alert">
+                <i class="fas fa-exclamation-triangle fa-2x mb-2"></i><br>
+                <strong>¿Está seguro que desea eliminar este avance?</strong><br>
+                Esta acción borrará el registro permanentemente y no se puede deshacer.
+            </div>
+
+            
+            <div class="form-row">
+                <div class="form-group col-md-12 col-sm-12">
+                    <?= $this->formLabel($this->formAvanceHistoria->get('descripcion')) ?>
+                    <div class="input-group">
+                        <?= $this->formElement($this->formAvanceHistoria->get('descripcion')) ?>
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i class="fas fa-file-alt"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+    </div>
+</div>
+
+<div class="modal-footer">
+    <button type="submit" class="btn btn-danger" title="ELIMINAR PERMANENTEMENTE">
+        <i class="fas fa-trash-alt"></i> Confirmar Eliminación
+    </button>
+    <button type="button" class="btn btn-secondary" data-dismiss="modal">
+        <i class="far fa-times-circle"></i> Cancelar
+    </button>
+</div>
+
+<?= $this->form()->closeTag(); ?>
+
+<script>
+   
+    $("input").keydown(function (e) {
+        if (e.which === 13) {
+            event.preventDefault();
+            return false;
+        }
+    });
+</script>

@@ -1,0 +1,106 @@
+<?php
+
+$this->formAvanceHistoria->prepare();
+?>
+
+<div class="modal-body">
+    <div class="container-fluid">
+        <fieldset>
+            <legend><i class="fas fa-eye"></i> Detalle del Avance</legend>
+            <hr>
+
+  
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label>ID Avance</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control" value="<?= $this->formAvanceHistoria->get('idAvance')->getValue() ?>" readonly>
+                        <div class="input-group-append">
+                            <span class="input-group-text"><i class="fas fa-hashtag"></i></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group col-md-6">
+                    <label>ID Historia</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control" value="<?= $this->formAvanceHistoria->get('idHistoria')->getValue() ?>" readonly>
+                        <div class="input-group-append">
+                            <span class="input-group-text"><i class="fas fa-link"></i></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+   
+            <div class="form-row">
+                <div class="form-group col-md-12">
+                    <?= $this->formLabel($this->formAvanceHistoria->get('descripcion')) ?>
+                    <div class="input-group">
+
+                        <?= $this->formElement($this->formAvanceHistoria->get('descripcion')) ?>
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i class="fas fa-align-left"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <hr>
+            
+ 
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label>Registrado Por</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control" value="<?= $this->formAvanceHistoria->get('registradopor')->getValue() ?>" readonly>
+                        <div class="input-group-append">
+                            <span class="input-group-text"><i class="fas fa-user"></i></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group col-md-6">
+                    <label>Fecha de Registro</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control" value="<?= $this->formAvanceHistoria->get('fechahorareg')->getValue() ?>" readonly>
+                        <div class="input-group-append">
+                            <span class="input-group-text"><i class="far fa-clock"></i></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <?php if ($this->formAvanceHistoria->get('modificadopor')->getValue()): ?>
+            <!-- Fila 4: Modificación (Solo si existe) -->
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label>Modificado Por</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control" value="<?= $this->formAvanceHistoria->get('modificadopor')->getValue() ?>" readonly>
+                        <div class="input-group-append">
+                            <span class="input-group-text"><i class="fas fa-user-edit"></i></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group col-md-6">
+                    <label>Fecha de Modificación</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control" value="<?= $this->formAvanceHistoria->get('fechahoramod')->getValue() ?>" readonly>
+                        <div class="input-group-append">
+                            <span class="input-group-text"><i class="far fa-clock"></i></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <?php endif; ?>
+
+        </fieldset>
+    </div>
+</div>
+
+<div class="modal-footer">
+    <button type="button" class="btn btn-secondary" data-dismiss="modal">
+        <i class="far fa-times-circle"></i> Cerrar
+    </button>
+</div>

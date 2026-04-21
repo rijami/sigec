@@ -1,0 +1,134 @@
+<?php
+$this->formTablero->prepare();
+echo $this->form()->openTag($this->formTablero);
+?>
+<div class="modal-body ui-front" style="max-height: 450px; overflow-y: auto;">
+    <div class="container-fluid">
+        <fieldset>
+            <legend>Informacion del tablero de control </legend>
+            <hr>
+            <div class="form-row">
+                <div class="form-group col-md-6 col-sm-6">
+                    <?= $this->formLabel($this->formTablero->get('idProceso')) ?>
+                    <div class="input-group">
+                        <?= $this->formSelect($this->formTablero->get('idProceso')) ?>
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i class="fas fa-project-diagram"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group col-md-6 col-sm-6">
+                    <?= $this->formLabel($this->formTablero->get('idCoordinacion')) ?>
+                    <div class="input-group">
+                        <?= $this->formSelect($this->formTablero->get('idCoordinacion')) ?>
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i class="fas fa-users"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-6 col-sm-6">
+                    <?= $this->formLabel($this->formTablero->get('nombre')) ?>
+                    <div class="input-group">
+                        <?= $this->formInput($this->formTablero->get('nombre')) ?>
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i class="fas fa-chart-pie"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group col-md-6 col-sm-6">
+                    <?= $this->formLabel($this->formTablero->get('estado')) ?>
+                    <div class="input-group">
+                        <?= $this->formInput($this->formTablero->get('estado')) ?>
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i class="fas fa-info"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group col-md-6 col-sm-6">
+                    <?= $this->formLabel($this->formTablero->get('idTablero')) ?>
+                    <div class="input-group">
+                        <?= $this->formInput($this->formTablero->get('idTablero')) ?>
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i class="fas fa-info"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </fieldset>
+        <hr>
+        <fieldset>
+            <legend>Buscar Usuario </legend>
+            <hr>
+            <div class="form-row">
+                <button type="button" onclick="getUsuarios(this.value)" class="btn btn-primary form-control-sm"
+                    title="ABRIR EL SELECCIONADOR DE USUARIOS">
+                    <i class="fas fa-search-plus"></i> Buscar Usuario
+                </button>
+            </div>
+            <hr>
+            <div class="form-row">
+                <div class="form-group col-md-2 col-sm-2">
+                    <label>ID</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control form-control-sm" id="idUsuario" name="idUsuario"
+                            readonly>
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i class="fas fa-key"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group col-md-5 col-sm-5">
+                    <label>USUARIO</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control form-control-sm" id="login" name="login" readonly>
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i class="fas fa-user"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group col-md-5 col-sm-5">
+                    <label>FUNCIONARIO</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control form-control-sm" id="empleado" name="empleado" readonly>
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i class="fas fa-user"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </div>
+
+    </fieldset>
+</div>
+</div>
+<div class=" modal-footer">
+    <button type="submit" class="btn btn-success" title="Registrar Usuario"><i class="fas fa-user-plus"></i> Asiganr
+        Tableros</button>
+    <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="far fa-times-circle"></i>
+        Cerrar</button>
+</div>
+<script>
+    $(document).ready(function () {
+        validarYBloquear();
+    });
+</script>
+<?= $this->form()->closeTag(); ?>

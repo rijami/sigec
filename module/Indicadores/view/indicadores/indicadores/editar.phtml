@@ -1,0 +1,220 @@
+<?php
+$this->formIndicadores->prepare();
+//$this->formIndicadores->setAttribute('action', $this->url('indicadores/indicadores', ['action' => 'editar', 'query' => ['idIndicador' => $this->formIndicadores->get('idIndicador')->getValue()]]));
+$this->formIndicadores->setAttribute('action', $this->url('indicadores/indicadores', ['action' => 'editar']));
+echo $this->form()->openTag($this->formIndicadores);
+?>
+<div class="modal-body ui-front" style="max-height: 450px; overflow-y: auto;">
+    <div class="container-fluid">
+        <fieldset>
+            <legend>Información del Nuevo indicador</legend>
+            <hr>
+            <div class="form-row">
+                <div class="form-group col-md-6 col-sm-6">
+                    <?= $this->formLabel($this->formIndicadores->get('id_indicador')) ?>
+                    <div class="input-group">
+                        <?= $this->formElement($this->formIndicadores->get('id_indicador')) ?>
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i class="fas fa-project-diagram"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group col-md-6 col-sm-6">
+                    <?= $this->formLabel($this->formIndicadores->get('idProceso')) ?>
+                    <div class="input-group">
+                        <?= $this->formElement($this->formIndicadores->get('idProceso')) ?>
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i class="fas fa-project-diagram"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group col-md-6 col-sm-6">
+                    <?= $this->formLabel($this->formIndicadores->get('idCoordinacion')) ?>
+                    <div class="input-group">
+                        <?= $this->formElement($this->formIndicadores->get('idCoordinacion')) ?>
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i class="fas fa-users"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-6 col-sm-6">
+                    <?= $this->formLabel($this->formIndicadores->get('codigo')) ?>
+                    <div class="input-group">
+                        <?= $this->formElement($this->formIndicadores->get('codigo')) ?>
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i class="fas fa-code"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group col-md-6 col-sm-6">
+                    <?= $this->formLabel($this->formIndicadores->get('nombre_indicador')) ?>
+                    <div class="input-group">
+                        <?= $this->formElement($this->formIndicadores->get('nombre_indicador')) ?>
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i class="fas fa-heading"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-6 col-sm-6">
+                    <?= $this->formLabel($this->formIndicadores->get('periodicidad')) ?>
+                    <div class="input-group">
+                        <?= $this->formElement($this->formIndicadores->get('periodicidad')) ?>
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i class="fas fa-calendar-alt"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group col-md-6 col-sm-6">
+                    <?= $this->formLabel($this->formIndicadores->get('meta')) ?>
+                    <div class="input-group">
+                        <?= $this->formElement($this->formIndicadores->get('meta')) ?>
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i class="fas fa-flag"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-6 col-sm-6">
+                    <?= $this->formLabel($this->formIndicadores->get('objetivo')) ?>
+                    <div class="input-group">
+                        <?= $this->formElement($this->formIndicadores->get('objetivo')) ?>
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i class="fas fa-tasks"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group col-md-6 col-sm-6">
+                    <?= $this->formLabel($this->formIndicadores->get('fuente_informacion')) ?>
+                    <div class="input-group">
+                        <?= $this->formElement($this->formIndicadores->get('fuente_informacion')) ?>
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i class="fas fa-database"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+             <div class="form-row">
+                <div class="form-group col-md-6 col-sm-6">
+                    <?= $this->formLabel($this->formIndicadores->get('TIPO_INDICADOR')) ?>
+                    <div class="input-group">
+                        <?= $this->formElement($this->formIndicadores->get('TIPO_INDICADOR')) ?>
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i class="fas fa-tasks"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group col-md-6 col-sm-6">
+                    <?= $this->formLabel($this->formIndicadores->get('SENTIDO')) ?>
+                    <div class="input-group">
+                        <?= $this->formElement($this->formIndicadores->get('SENTIDO')) ?>
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i class="fas fa-tasks"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </fieldset>
+        <fieldset>
+            <legend>Información de Trazabilidad</legend> <hr>
+            <div class="form-row">
+                <div class="form-group col-md-6 col-sm-12">
+                    <?= $this->formLabel($this->formIndicadores->get('registradopor')) ?>
+                    <div class="input-group">
+                        <?= $this->formElement($this->formIndicadores->get('registradopor')) ?>
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i class="fas fa-user-plus"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group col-md-6 col-sm-12">
+                    <?= $this->formLabel($this->formIndicadores->get('FechaRegistro')) ?>
+                    <div class="input-group">
+                        <?= $this->formElement($this->formIndicadores->get('FechaRegistro')) ?>
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i class="far fa-calendar-alt"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>                        
+                <div class="form-group col-md-6 col-sm-12">
+                    <?= $this->formLabel($this->formIndicadores->get('modificadopor')) ?>
+                    <div class="input-group">
+                        <?= $this->formElement($this->formIndicadores->get('modificadopor')) ?>
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i class="fas fa-user-edit"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group col-md-6 col-sm-12">
+                    <?= $this->formLabel($this->formIndicadores->get('fechahoramod')) ?>
+                    <div class="input-group">
+                        <?= $this->formElement($this->formIndicadores->get('fechahoramod')) ?>
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i class="far fa-clock"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>                        
+                <div class="form-group col-md-6 col-sm-12">
+                    <?= $this->formLabel($this->formIndicadores->get('estado')) ?>
+                    <div class="input-group">
+                        <?= $this->formElement($this->formIndicadores->get('estado')) ?>
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i class="far fa-clock"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>                        
+            </div>
+        </fieldset>
+    </div>
+</div>
+<div class="modal-footer">
+    <button type="submit" class="btn btn-success" title="ACTUALIZAR ESTE INDICADOR"  id="btnEditarIndicador" ><i class="far fa-edit"></i> Editar Indicador</button>
+    <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="far fa-times-circle"></i> Cerrar</button>
+</div>
+<?= $this->form()->closeTag(); ?>
+<script>
+    $("input").keydown(function (e) {
+        if (e.which === 13) {
+            event.preventDefault();
+            return false;
+        }
+    });
+</script>

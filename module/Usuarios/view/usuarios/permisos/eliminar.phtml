@@ -1,0 +1,91 @@
+<?php
+$formPermiso->prepare();
+echo $this->form()->openTag($formPermiso);
+?>
+<div class="modal-body ui-front" style="max-height: 450px; overflow-y: auto;">
+    <div class="container-fluid">
+
+        <fieldset>
+            <legend>Informacion del Rol</legend> <hr>
+            <div class="form-row">
+                <div class="form-group col-md-3 col-sm-3">
+                    <?= $this->formLabel($this->formPermiso->get('idRol')) ?>
+                    <div class="input-group">
+                        <?= $this->formElement($this->formPermiso->get('idRol')) ?>
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i class="fas fa-key"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group col-md-3 col-sm-3">
+                    <label for="rol">Rol</label>
+                    <div class="input-group">
+                        <input type="text" id="rol" name="rol" value="<?= $infoRol['rol'] ?>" class="form-control" readonly>
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i class="fas fa-address-card"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group col-md-6 col-sm-6">
+                    <label for="estado">Estado</label>
+                    <div class="input-group">
+                        <input type="text" id="estado" name="estado" value="<?= $infoRol['estado'] ?>" class="form-control" style="font-weight: bold" readonly>
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i class="fas fa-user-tie"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </fieldset> <hr>
+        <fieldset>
+            <legend>Informacion del Recurso</legend> <hr>
+            <div class="form-row">
+                 <div class="form-group col-md-3 col-sm-3">
+                    <label for="idRecurso">ID Recurso</label>
+                    <div class="input-group">
+                        <input type="text" id="idRecurso" name="idRecurso" value="<?= $infoRecurso['idRecurso'] ?>" class="form-control" style="font-weight: bold" readonly>
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i class="fas fa-user-tie"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group col-md-6 col-sm-6">
+                    <label for="segmentoComercial">Segmento Comercial</label>
+                    <div class="input-group">
+                        <input type="text" id="segmentoComercial" name="segmentoComercial" value="<?= $infoRecurso['recurso'] ?>" class="form-control" readonly>
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i class="fas fa-briefcase"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group col-md-3 col-sm-3">
+                    <label for="referenciapago">Referencia de Pago</label>
+                    <div class="input-group">
+                        <input type="text" id="referenciapago" name="referenciapago" value="<?= $infoRecurso['metodo'] ?>" class="form-control" readonly>
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i class="fas fa-money-check-alt"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </fieldset> <hr>
+    </div>
+</div>
+<div class="modal-footer">
+    <button type="submit" class="btn btn-warning" title="ELIMINAR ESTE DOCUMENTO"><i class="fas fa-times-circle" style="color: red"></i> Eliminar Recurso RBAC</button>
+    <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="far fa-times-circle"></i> Cerrar</button>
+</div>
+<?= $this->form()->closeTag(); ?>

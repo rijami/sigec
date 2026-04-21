@@ -1,0 +1,150 @@
+<?php
+$infoUsuario = $this->infoUsuario;
+$coordinacion = $this->coordinacion;
+$proceso = $this->proceso;
+if (is_array($infoUsuario)) {
+    ?>
+    <fieldset>
+        <legend>Informacion del Funcionario</legend>
+        <hr>
+        <div class="form-row">
+            <div class="form-group col-md-2 col-sm-2">
+                <label for="idCliente" class="font-weight-bold">ID Empleado</label>
+                <div class="input-group">
+                    <input type="text" id="idEmpleado" name="idEmpleado" value="<?= $infoUsuario['idEmpleado'] ?>"
+                        style="color: dodgerblue;" class="form-control font-weight-bold" readonly>
+                    <div class="input-group-append">
+                        <span class="input-group-text">
+                            <i class="fas fa-id-card"></i>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group col-md-4 col-sm-4">
+                <label for="identificacionAux">Identificacion</label>
+                <div class="input-group">
+                    <input type="text" id="identificacionAux" name="identificacionAux"
+                        value="<?= $infoUsuario['identificacion'] ?>" style="font-weight: bold" class="form-control"
+                        readonly>
+                    <div class="input-group-append">
+                        <span class="input-group-text">
+                            <i class="fas fa-id-card"></i>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group col-md-6 col-sm-6">
+                <label for="clienteAux">Empleado</label>
+                <div class="input-group">
+                    <input type="text" id="clienteAux" name="clienteAux" value="<?= $infoUsuario['empleado'] ?>"
+                        class="form-control" readonly>
+                    <div class="input-group-append">
+                        <span class="input-group-text">
+                            <i class="fas fa-user-tie"></i>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-3 col-sm-3">
+                <label for="idCliente" class="font-weight-bold">Usuario</label>
+                <div class="input-group">
+                    <input type="text" id="idEmpleado" name="idEmpleado" value="<?= $infoUsuario['login'] ?>"
+                        style="color: dodgerblue;" class="form-control font-weight-bold" readonly>
+                    <div class="input-group-append">
+                        <span class="input-group-text">
+                            <i class="fas fa-user"></i>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group col-md-4 col-sm-4">
+                <label for="idCliente">Proceso</label>
+                <div class="input-group">
+                    <input type="text" id="idEmpleado" name="idEmpleado" value="<?= $proceso ?>" class="form-control"
+                        readonly title="<?= $proceso ?>">
+                    <div class="input-group-append">
+                        <span class="input-group-text">
+                            <i class="fas fa-info"></i>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group col-md-5 col-sm-5">
+                <label for="idCliente">Coordinacion</label>
+                <div class="input-group">
+                    <input type="text" id="idEmpleado" name="idEmpleado" value="<?= $coordinacion ?>" class="form-control"
+                        readonly title="<?= $coordinacion ?>">
+                    <div class="input-group-append">
+                        <span class="input-group-text">
+                            <i class="fas fa-info"></i>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-6 col-sm-6">
+                <label for="idCliente">Rol</label>
+                <div class="input-group">
+                    <input type="text" id="idEmpleado" name="idEmpleado" value="<?= $infoUsuario['rol'] ?>"
+                        class="form-control" readonly>
+                    <div class="input-group-append">
+                        <span class="input-group-text">
+                            <i class="fas fa-info"></i>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group col-md-6 col-sm-6">
+                <label for="idCliente">Estado</label>
+                <div class="input-group">
+                    <input type="text" id="idEmpleado" name="idEmpleado" value="<?= $infoUsuario['estado'] ?>"
+                        class="form-control" readonly>
+                    <div class="input-group-append">
+                        <span class="input-group-text">
+                            <i class="fas fa-info"></i>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--        <div class="form-row">
+                        
+                        
+                    </div>-->
+    </fieldset>
+    <hr>
+<?php } else { ?>
+    <script>
+        setTimeout(function () {
+            //            document.getElementById("existecliente").classList.add("hidden");
+            document.getElementById("existecliente").style.display = "none";
+        }, 3000);
+    </script>
+    <style>
+        .fade-out {
+            transition: opacity 1s ease-in-out;
+            /* Transición suave */
+            opacity: 1;
+            /* Inicialmente visible */
+        }
+
+        .fade-out.hidden {
+            opacity: 0;
+            /* Invisible */
+        }
+    </style>
+    <div id="existecliente" class="fade-out alert alert-danger" role="alert">
+        EL FUNCIONARIO NO FUE ENCONTRADO EN EL SISTEMA
+    </div>
+
+    <hr>
+<?php } ?>
+<script>
+    $("[data-toggle=\'tooltip\']").tooltip({
+        boundary: 'window',
+        delay: 2
+    });
+</script>

@@ -1,0 +1,51 @@
+<?php
+$this->formIndicadores->prepare();
+echo $this->form()->openTag($this->formIndicadores);
+?>
+<div class="modal-body ui-front" style="max-height: 450px; overflow-y: auto;">
+    <div class="container-fluid">
+        <fieldset>
+            <legend>Informacion de la Activación </legend>
+            <hr>
+            <div class="form-row">
+                <div class="form-group col-md-6 col-sm-6">
+                    <?= $this->formLabel($this->formIndicadores->get('idCoordinacion')) ?>
+                    <div class="input-group">
+                        <?= $this->formSelect($this->formIndicadores->get('idCoordinacion')) ?>
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i class="fas fa-users"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group col-md-6 col-sm-6">
+                    <label for="idEmpleado">Fecha Limite de Activación *</label>
+                    <div class="input-group">
+                        <input type="date" class="form-control" id="fechalimactivacion" name="fechalimactivacion"
+                            placeholder="Ingrese la identificacion del funcionario" 
+                            required>
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i class="fas fa-calendar"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </fieldset>
+    </div>
+</div>
+<div class="modal-footer">
+    <button type="submit" class="btn btn-success" title="Registrar Usuario"><i class="fas fa-check"></i> Activar
+        Indicadores</button>
+    <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="far fa-times-circle"></i>
+        Cerrar</button>
+</div>
+<script>
+    $(document).ready(function () {
+        validarYBloquear();
+    });
+</script>
+<?= $this->form()->closeTag(); ?>

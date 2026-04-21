@@ -1,0 +1,6 @@
+<option value="">Seleccione...</option>
+<?php
+foreach ($this->referencias as $acta) {
+    echo '<option value="' . $acta['idReferencia'] . '">' . $acta['referencia'] . '</option>';
+}
+?>

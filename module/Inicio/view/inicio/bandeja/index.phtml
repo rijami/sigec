@@ -1,0 +1,309 @@
+<?php
+//--------- CARGAR MENSAJES DE ALERTA ------------------------------------------
+$flash = $this->flashMessenger();
+$notificaciones = [
+    'success' => array_merge($flash->getSuccessMessages(), $flash->getCurrentSuccessMessages()),
+    'error' => array_merge($flash->getErrorMessages(), $flash->getCurrentErrorMessages()),
+    'alert' => array_merge($flash->getMessages(), $flash->getCurrentMessages()),
+    'information' => array_merge($flash->getInfoMessages(), $flash->getCurrentInfoMessages()),
+    'warning' => array_merge($flash->getWarningMessages(), $flash->getCurrentWarningMessages()),
+];
+$flash->clearCurrentMessages('default');
+$flash->clearCurrentMessages('info');
+$flash->clearCurrentMessages('success');
+$flash->clearCurrentMessages('warning');
+$flash->clearCurrentMessages('error');
+$mostrarMensajes = '';
+foreach (array_filter($notificaciones) as $tipo => $mensajes) {
+    $tipoToastr = 'info';
+    $titulo = 'SwApp';
+    switch ($tipo) {
+        case 'success':
+            $titulo = ' OK ';
+            $tipoToastr = 'success';
+            break;
+        case 'error':
+            $titulo = ' ERROR ';
+            $tipoToastr = 'error';
+            break;
+        case 'alert':
+            $titulo = ' ALERTA ';
+            $tipoToastr = 'warning';
+            break;
+        case 'information':
+            $titulo = ' INFORMACION ';
+            $tipoToastr = 'info';
+            break;
+        case 'warning':
+            $titulo = ' PRECAUCION ';
+            $tipoToastr = 'warning';
+            break;
+    }
+    foreach ($mensajes as $mensaje) {
+        $mostrarMensajes .= "toastr.$tipoToastr('$mensaje', '$titulo', {
+                closeButton: true,
+                debug: false,
+                newestOnTop: false,
+                progressBar: true,
+                positionClass: 'toast-top-right',
+                preventDuplicates: true,
+                onclick: null,
+                showDuration: '300',
+                hideDuration: '1000',
+                timeOut: '10000',
+                extendedTimeOut: '10000',
+                showEasing: 'swing',
+                hideEasing: 'linear',
+                showMethod: 'fadeIn',
+                hideMethod: 'fadeOut'
+            }); ";
+    }
+}
+//------------------------------------------------------------------------------
+
+$title = 'Bandeja de Entrada';
+$this->headTitle($title);
+$this->headScript()->prependScript('
+            $(document).ajaxStop($.unblockUI);
+            $(document).ready(function() {
+                $("#tabla").DataTable({
+                    responsive: false,
+                    iDisplayLength: 25,
+                    sPaginationType: "full_numbers",
+                    oLanguage: {
+                        sLengthMenu: "Mostrar: _MENU_ registros por pagina",
+                        sZeroRecords: "NO SE HA ENCONTRADO INFORMACION",
+                        sInfo: "Mostrando <b>_START_</b> a <b>_END_</b> registros <br>TOTAL REGISTROS: <b>_TOTAL_</b> Registros</b>",
+                        sInfoEmpty: "Mostrando 0 A 0 registros",
+                        sInfoFiltered: "(Filtrados de un total de <b>_MAX_</b> registros)",
+                        sLoadingRecords: "CARGANDO...",
+                        sProcessing: "EN PROCESO...",
+                        sSearch: "Buscar:",
+                        sEmptyTable: "NO HAY INFORMACION DISPONIBLE PARA LA TABLA",
+                        oPaginate: {
+                            sFirst: "<i class=\'fa fa-fast-backward\' aria-hidden=\'true\' title=\'Inicio\'></i>",
+                            sPrevious: "<i class=\'fa fa-step-backward\' aria-hidden=\'true\' title=\'Anterior\'></i>",
+                            sNext: "<i class=\'fa fa-step-forward\' aria-hidden=\'true\' title=\'Siguiente\'></i>",
+                            sLast: "<i class=\'fa fa-fast-forward\' aria-hidden=\'true\' title=\'Fin\'></i>",
+                        }
+                    },
+                    aaSorting: [[0, "desc"]]
+                });
+                //------------------------------------------------------------------------------
+                // MANIPULACION DEL EVENTO DE CIERRE DEL MODAL
+                //------------------------------------------------------------------------------
+                $("#modalFormulario").on("hide.bs.modal", function (e) {
+                    Swal.fire({
+                        title: "DESEA CERRAR EL FORMULARIO ?",
+                        text: "",
+                        icon: "warning",
+                        showCancelButton: true,
+                        confirmButtonText: "Si",
+                        cancelButtonText: "No",
+                        allowOutsideClick: false
+                    }).then((result) => {
+                        if (!result.isConfirmed) {
+                            $(this).modal("show");
+                        }
+                    });
+                });
+                //------------------------------------------------------------------------------
+                ' . $mostrarMensajes . '
+            });', 'text/javascript', array('noescape' => true))
+    ->prependFile($this->basePath('/js/sistema/bandejaEntrada.js'));
+?>
+<div class="container py-3">
+
+    <!-- TARJETA BIENVENIDA -->
+    <div class="card shadow-sm border-0 mb-4">
+        <div class="card-body">
+            <div class="row align-items-center">
+
+                <div class="col-md-8">
+                    <h3 class="mb-1">👋 Bienvenido</h3>
+                    <hr>
+                    <span class="badge p-2"
+                        style="background: #eede00; color: #575212; font-size: 100%"><?= strtoupper($this->empleado) ?>
+                    </span>
+                    <hr>
+
+                    <?php foreach ($this->roles as $rol) { ?>
+                        <span class="badge badge-success p-2"><?= $rol ?></span>
+                    <?php } ?>
+
+                    <hr>
+
+                    <div class="row">
+
+                        <div class="col-md-4">
+                            <div class="card border-0 shadow-sm text-center">
+                                <div class="card-body">
+                                    <i class="fas fa-clock fa-2x text-primary mb-2"></i>
+                                    <h6>Último ingreso</h6>
+                                    <small>
+                                        <?= $this->fechaultingresoTXT ?><br>
+                                        <?= $this->horaultingreso ?>
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="card border-0 shadow-sm text-center">
+                                <div class="card-body">
+                                    <i class="fas fa-exclamation-triangle fa-2x text-danger mb-2"></i>
+                                    <h6>Intentos fallidos</h6>
+                                    <span class="badge badge-danger p-2">
+                                        <?= $this->contFallidos ?> intentos
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="card border-0 shadow-sm text-center">
+                                <div class="card-body">
+                                    <i class="fas fa-calendar fa-2x text-success mb-2"></i>
+                                    <h6>Fecha actual</h6>
+                                    <small><?= $this->fechaTXT ?></small>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="col-md-4 text-center">
+                    <img src="<?= $this->basePath('img/logoCuadros.png'); ?>" class="img-fluid rounded shadow-sm p-3"
+                        style="max-width:220px">
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+    <!-- INDICADORES RAPIDOS -->
+    <?php if (!empty($this->INDICADORES)) { ?>
+        <div class="card shadow-sm border-0 mb-4">
+            <div class="card-body">
+                <div class="row">
+
+                    <?php foreach ($this->INDICADORES as $indicador) { ?>
+
+                        <div class="col-md-3 mb-2">
+
+                            <button class="btn btn-sm <?= $indicador['classColorInd'] ?> w-100"
+                                onclick="location.href='<?= $indicador['url'] ?>'">
+
+                                <?= $indicador['indicador'] ?>
+
+                                <span class="badge badge-light">
+                                    <?= number_format($indicador['valor']) ?>
+                                </span>
+
+                            </button>
+
+                        </div>
+
+                    <?php } ?>
+
+                </div>
+            </div>
+        </div>
+    <?php } ?>
+
+
+    <!-- MODULOS -->
+    <div class="row text-center">
+
+        <div class="col-md-4 mb-4">
+
+            <div class="card shadow-sm border-0 h-100" onmouseover="$(this).addClass('shadow')"
+                onmouseout="$(this).removeClass('shadow')">
+
+                <a href="<?= $this->url('inicio/bandeja', ['action' => 'modulousuarios']) ?>"
+                    class="text-decoration-none">
+
+                    <div class="card-body">
+
+                        <img src="<?= $this->basePath('img/gestion_user.png'); ?>" class="rounded img-fluid"
+                            alt="Imagen" style="width: 100%; height: auto">
+
+                        <h5 class="text-dark">
+                            Gestión de Usuarios
+                        </h5>
+
+                    </div>
+
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <div class="col-md-4 mb-4">
+
+            <div class="card shadow-sm border-0 h-100" onmouseover="$(this).addClass('shadow')"
+                onmouseout="$(this).removeClass('shadow')">
+
+                <a href="<?= $this->url('indicadores/indicadores', ['action' => 'index']) ?>"
+                    class="text-decoration-none">
+
+                    <div class="card-body">
+
+                        <img src="<?= $this->basePath('img/clipboard.png'); ?>" class="rounded img-fluid" alt="Imagen"
+                            style="width: 50%; height: auto">
+
+                        <h5 class="text-dark">
+                            Indicadores de Gestión
+                        </h5>
+
+                    </div>
+
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-sm border-0 h-100" onmouseover="$(this).addClass('shadow')"
+                onmouseout="$(this).removeClass('shadow')">
+                <a href="<?= $this->url('inicio/bandeja', ['action' => 'modulotableros']) ?>"
+                    class="text-decoration-none">
+                    <div class="card-body">
+                        <img src="<?= $this->basePath('img/grafic.png'); ?>" class="rounded img-fluid" alt="Imagen"
+                            style="width: 50%; height: auto">
+                        <h5 class="text-dark">
+                            Tableros de Control
+                        </h5>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div id="msgBloqueo" style="display: none;">
+    SU SOLICITUD ESTA SIENDO PROCESADA, POR FAVOR ESPERE...
+</div>
+
+<div class="modal fade" id="modalFormulario" data-backdrop="static" tabindex="-1" aria-labelledby="lbModalFormulario"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="lbModalFormulario">Formulario</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div id="divContenido"></div>
+        </div>
+    </div>
+</div>

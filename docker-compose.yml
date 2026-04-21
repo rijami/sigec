@@ -1,0 +1,24 @@
+version: "3.8"
+
+services:
+  sigec:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: sigec_app
+    restart: unless-stopped
+    ports:
+      - "8080:80"
+    environment:
+      # ── Base de datos SQL Server ──────────────────────────
+      DB_HOST: ${DB_HOST:-172.17.1.120}
+      DB_PORT: ${DB_PORT:-1433}
+      DB_NAME: ${DB_NAME:-DB_GESTION_INDICADORES}
+      DB_USER: ${DB_USER:-Estadistica}
+      DB_PASS: ${DB_PASS}
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s

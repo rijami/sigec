@@ -1,0 +1,279 @@
+<?= $this->doctype() ?>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!--< ?= $this->headTitle('JOSANDRO')->setSeparator(' - ')->setAutoEscape(false) ?>-->
+
+    <?=
+        $this->headMeta()->appendName('viewport', 'width=device-width, initial-scale=1.0, shrink-to-fit=no')->appendHttpEquiv('X-UA-Compatible', 'IE=edge')
+        ?>
+
+    <!-- css -->
+    <?=
+        $this->headLink([
+            'rel' => 'shortcut icon',
+            'type' => 'image/vnd.microsoft.icon',
+            'href' => $this->basePath() . '/img/favicon.ico'
+        ])
+            ->prependStylesheet($this->basePath('css/hover-min.css'))
+            ->prependStylesheet($this->basePath('css/app.css'))
+            ->prependStylesheet($this->basePath('css/toastr.min.css'))
+            ->prependStylesheet($this->basePath('css/sweetalert2-bootstrap-4.min.css'))
+            ->prependStylesheet($this->basePath('css/bootstrap.min.css'))
+            ->prependStylesheet($this->basePath('css/datatables.min.css'))
+            ->prependStylesheet($this->basePath('css/all_fontawesome.min.css'))
+            ->prependStylesheet($this->basePath('css/jquery-ui.theme.min.css'))
+            ->prependStylesheet($this->basePath('css/jquery-ui.structure.min.css'))
+            ->prependStylesheet($this->basePath('css/jquery-ui.min.css'));
+    ?>
+    <!-- Scripts -->
+    <?=
+        $this->headScript()
+            ->prependFile($this->basePath('js/toastr.min.js'), 'text/javascript')
+            ->prependFile($this->basePath('js/sweetalert2.min.js'), 'text/javascript')
+            ->prependFile($this->basePath('js/jquery-ui.min.js'), 'text/javascript')
+            ->prependFile($this->basePath('js/jquery.blockUI.js'), 'text/javascript')
+            ->prependFile('https://cdnjs.cloudflare.com/ajax/libs/zxcvbn/4.4.2/zxcvbn.js', 'text/javascript')
+            ->prependFile($this->basePath('js/jquery-3.6.0.min.js'), 'text/javascript')
+            ->prependFile($this->basePath('js/respond.min.js'), 'text/javascript', array('conditional' => 'lt IE 9', ))
+            ->prependFile($this->basePath('js/html5shiv.min.js'), 'text/javascript', array('conditional' => 'lt IE 9', ));
+    ?>
+    <style>
+        body {
+            background-image: url(<?= $this->basePath('img/fondo.jpg') ?>);
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+            rgba(0, 0, 0, 0.12);
+        }
+
+        .ui-autocomplete-loading {
+            background: white url("<?= $this->basePath('img/loading_16x16.gif'); ?>") right center no-repeat;
+        }
+
+        .ui-autocomplete {
+            max-height: 100px;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+
+        .modal {
+            overflow: scroll !important;
+        }
+
+        .imgCardBandeja:hover {
+            /*                transform: scale(1.1);
+                                transition: transform 0.3s ease;*/
+            color: #28a745 !important;
+        }
+
+        /**/
+        @media (min-width: 992px) {
+            .dropdown-menu .dropdown-toggle:after {
+                border-top: .3em solid transparent;
+                border-right: 0;
+                border-bottom: .3em solid transparent;
+                border-left: .3em solid;
+            }
+
+            .dropdown-menu .dropdown-menu {
+                margin-left: 0;
+                margin-right: 0;
+            }
+
+            .dropdown-menu li {
+                position: relative;
+            }
+
+            .nav-item .submenu {
+                display: none;
+                position: absolute;
+                left: 100%;
+                top: -7px;
+            }
+
+            .nav-item .submenu-left {
+                right: 100%;
+                left: auto;
+            }
+
+            .dropdown-menu>li:hover {
+                background-color: #f1f1f1
+            }
+
+            .dropdown-menu>li:hover>.submenu {
+                display: block;
+            }
+        }
+    </style>
+</head>
+
+<body class="d-flex flex-column min-vh-100">
+
+    <?php
+    $loginUsuario = 'SESION NO INICIADA';
+    $auth = new Laminas\Authentication\AuthenticationService();
+
+    if ($auth->hasIdentity()) {
+        $session = $auth->getIdentity();
+        $container = new Laminas\Session\Container();
+        if (isset($container->rbac)) {
+            $rbac = $container->rbac;
+            ?>
+            <nav id="menuppal" class="navbar navbar-expand-lg navbar-dark bg-dark" style="background: #84BB4E !important;">
+                <a class="navbar-brand" href="<?= $this->url('inicio') ?>"
+                    style="background: white; border-radius: 7px; padding: 10px 5px;">
+                    <img src="<?= $this->basePath('img/logomallamas.png'); ?>" class="img-responsive" alt="Logo" width="80">
+                </a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault"
+                    aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item active">
+                            <a class="nav-link" href="<?= $this->url('inicio') ?>"><i class="fas fa-home fa-lg"></i> <span
+                                    class="sr-only">(current)</span></a>
+                        </li>
+                        <?php if ($rbac->isGranted($session->login, 'SUPER_ADMINISTRADOR:GET') || $rbac->isGranted($session->login, 'ADMINISTRADOR:GET')) { ?>
+
+                        <?php } ?>
+                        <?php if ($rbac->isGranted($session->login, 'VENDEDOR:GET')) { ?>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="menuCategorias" data-toggle="dropdown"
+                                    aria-expanded="false">Productos</a>
+                            </li>
+                            <?php if ($rbac->isGranted($session->login, 'SUPER_ADMINISTRADOR:GET') || $rbac->isGranted($session->login, 'ADMINISTRADOR:GET') || $rbac->isGranted($session->login, 'CONTROLADOR_EVIDENCIAS:GET')) { ?>
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" href="#" id="menuCategorias" data-toggle="dropdown"
+                                        aria-expanded="false">Inventario</a>
+                                </li>
+                            <?php } ?>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="menuProductos" data-toggle="dropdown"
+                                    aria-expanded="false">Ventas</a>
+                            </li>
+                            <?php if ($rbac->isGranted($session->login, 'SUPER_ADMINISTRADOR:GET') || $rbac->isGranted($session->login, 'ADMINISTRADOR:GET') || $rbac->isGranted($session->login, 'CONTROLADOR_EVIDENCIAS:GET')) { ?>
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" href="#" id="menuContratacion" data-toggle="dropdown"
+                                        aria-expanded="false">Contratacion</a>
+                                </li>
+                            <?php } ?>
+                        <?php } ?>
+                    </ul>
+                    <ul class="navbar-nav justify-content-end">
+                        <li class="nav-item dropdown">
+                            <a title="Perfil de Usuario" class=" nav-link dropdown-toggle mr-3 mr-lg-0" id="menuUsuario"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fas fa-user-cog fa-flip-horizontal fa-lg"></i><span class="caret"></span>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="menuUsuario">
+                                <a class="dropdown-item text-primary" href="#"
+                                    style="font-weight: bold"><?= $auth->getIdentity()->login; ?></a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="<?= $this->url('cerrarsesion') ?>"><i
+                                        class="fas fa-sign-out-alt"></i> Cerrar Sesion</a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </nav> <br>
+
+            <main role="main">
+                <?= $this->content ?>
+            </main>
+        <?php } else { ?>
+            <main role="main" class="flex-shrink-0">
+                <div class="container body">
+                    <div class="main_container">
+                        <div class="col-md-12">
+                            <div class="col-middle">
+                                <div class="text-center text-center" style="padding: 20px">
+                                    <img src="<?= $this->basePath('img/logoMasclick.png'); ?>" class="img-responsive" alt="Logo"
+                                        width="250">
+                                    <hr>
+                                    <h1 class="error-number">ERROR 4041</h1>
+                                    <h2>Lo Siento, pero no encuentro la pagina.</h2>
+                                    <p>La pagina que estas buscando no existe.</p> <br><br>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+            <?php
+        }
+    } else {
+        ?>
+        <main role="main" class="flex-shrink-0">
+            <div class="container body">
+                <div class="main_container">
+                    <div class="col-md-12">
+                        <div class="col-middle">
+                            <div class="text-center text-center" style="padding: 20px">
+                                <img src="<?= $this->basePath('img/logoMasclick.png'); ?>" class="img-responsive" alt="Logo"
+                                    width="250">
+                                <hr>
+                                <h1 class="error-number">ERROR 4042</h1>
+                                <h2>Lo Siento, pero no encuentro la pagina.</h2>
+                                <p>La pagina que estas buscando no existe.</p> <br><br>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    <?php } ?>
+    <hr>
+    <footer class="footer mt-auto py-3 bg-dark" style="background:#84BB4E !important;">
+        <div class="container">
+            <div class="row">
+                <div style="text-align: center" class="col-md-4 col-sm-12">
+                    <img src="<?= $this->basePath('img/logomallamas.png'); ?>" class="img-responsive"
+                        alt="Logo Dobleclick" width="150"
+                        style="margin: 0 auto; background: white; border-radius: 7px; padding: 5px;">
+                </div>
+                <div style="text-align: center" class="col-md-4 col-sm-12">
+                </div>
+                <div style="padding: 10px 30px; text-align: center; font-size: 12px; color: #ffffff"
+                    class="col-md-4 col-sm-12">
+                    <b>MALLAMAS EPS-I</b> <br>
+                    &copy; Copyright Coordinacion de Estadistica 2025-<?= date('Y'); ?>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <?=
+        $this->inlineScript()
+            ->prependFile($this->basePath('js/bootstrap.bundle.min.js'))
+            ->prependFile($this->basePath('js/datatables.min.js'))
+        ?>
+    <script>
+        $(document).ready(function () {
+            $(document).on('click', '.dropdown-menu', function (e) {
+                if ($(this).attr('class') === 'dropdown-menu show') {
+                    e.stopPropagation();
+                }
+            });
+            // make it as accordion for smaller screens
+            if ($(window).width() < 992) {
+                $('.dropdown-menu a').click(function (e) {
+                    if ($(this).attr('class') !== 'dropdown-item') {
+                        e.preventDefault();
+                    }
+                    if ($(this).next('.submenu').length) {
+                        $(this).next('.submenu').toggle();
+                    }
+                    $('.dropdown').on('hide.bs.dropdown', function () {
+                        $(this).find('.submenu').hide();
+                    })
+                });
+            }
+        });
+    </script>
+</body>
+
+</html>

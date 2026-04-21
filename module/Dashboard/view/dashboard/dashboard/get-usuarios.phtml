@@ -1,0 +1,69 @@
+<div class="modal-body ui-front" style="max-height: 450px; overflow-y: auto;">
+    <div class="container-fluid">
+        <div class="table-responsive" style="font-size: 11px">
+            <table id="tblBuscarTarifas" class="table table-striped table-bordered table-hover table-sm"
+                style="width: 100%">
+                <thead class="thead-dark">
+                    <tr>
+                        <th scope="col" class="text-center align-middle" style="width: 8%"><i
+                                class="fas fa-cog fa-spin"></i></th>
+                        <th scope="col" class="text-center align-middle" style="width: 3%">ID</th>
+                        <th scope="col" class="text-center align-middle">USUARIO</th>
+                        <th scope="col" class="text-center align-middle">FUNCIONARIO</th>
+                        <th scope="col" class="text-center align-middle">ESTADO</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
+                    foreach ($this->usuarios as $usuario) {
+                        $idUsuario = json_encode($usuario['idUsuario']);
+                        $login = json_encode($usuario['login']);
+                        $empleado = json_encode($usuario['empleado']);
+                        echo '<tr>';
+                        echo '<td class="text-center align-middle">';
+
+
+                        echo '<a href="#" 
+        onclick=\'seleccionarUsuario(' . $idUsuario . ', ' . $login . ', ' . $empleado . ')\' 
+        title="SELECCIONAR ESTE USUARIO">
+        <i class="fa fa-check-circle fa-lg text-success"></i>
+      </a>';
+                        echo '</td>';
+                        echo '<th scope="row" class="text-center align-middle">' . $usuario['idUsuario'] . '</th>';
+                        echo '<th scope="row" class="text-center align-middle">' . $usuario['login'] . '</th>';
+                        echo '<th scope="row" class="text-center align-middle">' . $usuario['empleado'] . '</th>';
+                        echo '<th scope="row" class="text-center align-middle">' . $usuario['estado'] . '</th>';
+                        /*  echo '<td class="text-center align-middle">' . $materias['nombre'] . '</td>';
+                         echo '<td class="text-center align-middle">' . $materias['descripcion'] . '</td>';
+                         echo '<td class="text-center align-middle">' . $materias['unidad'] . '</td>';
+                         echo '<td class="text-center align-middle">' . $materias['medida'] . '</td>';
+                         echo '<td class="text-center align-middle font-weight-bold">$' . number_format($materias['costounitario']) . '</td>';
+                             echo '<td class="text-center align-middle">' . $materias['proveedor'] . '</td>';
+                             echo '<td class="text-center align-middle">' . $materias['estado'] . '</td>'; */
+                        echo '</tr>';
+                    }
+                    ?>
+                </tbody>
+                <tfoot></tfoot>
+            </table>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times"></i> Cerrar</button>
+</div>
+
+<!--<script>
+    $(".sinDiacriticos").keypress(function (tecla) {
+        let codigoTecla = parseInt(tecla.charCode);
+        if ((codigoTecla < 65 || codigoTecla > 90) && (codigoTecla < 97 || codigoTecla > 122) && codigoTecla !== 32) {
+            if (codigoTecla !== 209 && codigoTecla !== 241) {
+                return false;
+            }
+        }
+    });
+
+    $('#nomenclatura').select2({
+        dropdownParent: $('#modalNomenclaturas'),
+    });
+</script>-->

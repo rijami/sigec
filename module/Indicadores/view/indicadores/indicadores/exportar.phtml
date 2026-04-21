@@ -1,0 +1,136 @@
+<?php
+$this->formIndicadores->prepare();
+echo $this->form()->openTag($this->formIndicadores);
+?>
+<div class="modal-body ui-front" style="max-height: 450px; overflow-y: auto;">
+    <div class="container-fluid">
+        <fieldset>
+            <legend>Filtros de Exportacion </legend>
+            <hr>
+            <div class="form-row">
+                <div class="form-group col-md-6 col-sm-6">
+                    <label>Proceso</label>
+                    <div class="input-group">
+                        <select id="procesoBusq" name="procesoBusq" class="form-control">
+                            <option value="">Seleccione...</option>
+                            <?php foreach ($procesos as $proceso) {
+                                echo "<option value=" . $proceso['idProceso'] . ">" . $proceso['Proceso'] . "</option>";
+                            } ?>
+                        </select>
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i class="fas fa-project-diagram"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group col-md-6 col-sm-6">
+                    <label>Coordinaciones</label>
+                    <div class="input-group">
+                        <select id="CoordinacionBusq" name="CoordinacionBusq" class="form-control">
+                            <option value="">Seleccione...</option>
+                            <?php foreach ($coordinaciones as $coordinacion) {
+                                echo "<option value=" . $coordinacion['idCoordinacion'] . ">" . $coordinacion['Coordinacion'] . "</option>";
+                            } ?>
+                        </select>
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i class="fas fa-users"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-4 col-sm-4">
+                    <label>Periodicidad</label>
+                    <div class="input-group">
+                        <select id="periodicidadBusq" name="periodicidadBusq" class="form-control">
+                            <option value="">Seleccione...</option>
+                            <option value="Mensual">Mensual</option>
+                            <option value="Trimestral">Trimestral</option>
+                            <option value="Semestral">Semestral</option>
+                            <option value="Anual">Anual</option>
+                        </select>
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i class="fas fa-calendar-alt"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group col-md-4 col-sm-4">
+                    <label>Tipo Indicador</label>
+                    <div class="input-group">
+                        <select id="tipoindicadorBusq" name="tipoindicadorBusq" class="form-control">
+                            <option value="">Seleccione...</option>
+                            <option value="Acomulativo">Acomulativo</option>
+                            <option value="No Acomulativo">No Acomulativo</option>
+
+                        </select>
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i class="fas fa-tasks"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group col-md-4 col-sm-4">
+                    <label>Sentido</label>
+                    <div class="input-group">
+                        <select id="sentidoBusq" name="sentidoBusq" class="form-control">
+                            <option value="">Seleccione...</option>
+                            <option value="Ascendente">Ascendente</option>
+                            <option value="Descendente">Descendente</option>
+                        </select>
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i class="fas fa-tasks"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-6 col-sm-6">
+                    <label>Fecha Inicio</label>
+                    <div class="input-group">
+                        <input type="date" class="form-control" name="fechainiBusq" id="fechainiBusq">
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i class="fas fa-calendar"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group col-md-6 col-sm-6">
+                    <label>Fecha Fin</label>
+                    <div class="input-group">
+                        <input type="date" class="form-control" name="fechafinBusq" id="fechafinBusq">
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i class="fas fa-calendar"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </fieldset>
+    </div>
+</div>
+<div class="modal-footer">
+    <button type="submit" class="btn btn-success" title="Exportar Indicadores"><i class="fas fa-file"></i> Exportar
+        Indicadores</button>
+    <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="far fa-times-circle"></i>
+        Cerrar</button>
+</div>
+<script>
+    $(document).ready(function () {
+        validarYBloquear();
+    });
+</script>
+<?= $this->form()->closeTag(); ?>

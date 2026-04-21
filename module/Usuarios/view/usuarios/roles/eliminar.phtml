@@ -1,0 +1,80 @@
+<?php
+$this->formRol->prepare();
+echo $this->form()->openTag($this->formRol);
+?>
+<div class="modal-body ui-front" style="max-height: 450px; overflow-y: auto;">
+    <div class="container-fluid">
+        <fieldset>
+            <legend>Informacion del Rol</legend> <hr>
+            <div class="form-row">
+                <div class="form-group col-md-12 col-sm-12">
+                    <?= $this->formLabel($this->formRol->get('rol')) ?>
+                    <div  class="input-group input-group-sm">
+                        <?= $this->formElement($this->formRol->get('rol')) ?>
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i class="fas fa-user"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+        <fieldset>
+            <legend>Informacion de Registro</legend> <hr>
+            <div class="form-row">
+                <div class="form-group col-md-2 col-sm-2">
+                    <?= $this->formLabel($this->formRol->get('idRol')) ?>
+                    <div class="input-group input-group-sm" >  
+                        <?= $this->formElement($this->formRol->get('idRol')) ?>
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i class="fas fa-key"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-4 col-sm-4">
+                    <?= $this->formLabel($this->formRol->get('estado')) ?>
+                    <div  class="input-group input-group-sm">
+                        <?= $this->formElement($this->formRol->get('estado')) ?>
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i class="far fa-clock"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group col-md-4 col-sm-4">
+                    <?= $this->formLabel($this->formRol->get('registradopor')) ?>
+                    <div  class="input-group input-group-sm">
+                        <?= $this->formElement($this->formRol->get('registradopor')) ?>
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i class="far fa-clock"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group col-md-4 col-sm-4">
+                    <?= $this->formLabel($this->formRol->get('fechahorareg')) ?>
+                    <div  class="input-group input-group-sm">
+                        <?= $this->formElement($this->formRol->get('fechahorareg')) ?>
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i class="far fa-clock"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </fieldset> <hr>  
+    </div>
+</div>
+<div class="modal-footer">
+    <button type="submit" class="btn btn-warning" title="ELIMINAR ESTE ROL"><i style="color: red" class="fas fa-times-circle"></i> Eliminar Rol</button>
+    <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="far fa-times-circle"></i> Cerrar</button>
+</div>
+<?= $this->form()->closeTag(); ?>

@@ -1,0 +1,67 @@
+<div class="text-center mb-4">
+    <br><img class="img-responsive" src="<?= $this->basePath('img/logomallamas.png'); ?>" alt="" width="250"> <br>
+    <br>
+    <h4 style="color: #84BB4E">SIGEC Sistema Integrado de Gestión y Evaluación de Control</h4>
+</div>
+<?php
+$form = $this->formLogin;
+$form->prepare();
+echo $this->form()->openTag($form);
+?>
+<style>
+    .password-container {
+        position: relative;
+    }
+
+    .password-container button {
+        position: absolute;
+        right: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        border: none;
+        background: transparent;
+        padding: 0;
+        cursor: pointer;
+    }
+</style>
+<div class="row justify-content-center">
+    <div class="col-md-9">
+        <div class="form-label-group">
+            <input type="text" name="login" class="form-control text-lowercase" placeholder="Usuario" required>
+            <label for="login">Usuario</label>
+        </div>
+    </div>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-md-9">
+        <div class="form-label-group password-container">
+            <input type="password" id="password" name="password" class="form-control" placeholder="Clave" required>
+            <button type="button" onclick="mostrarPassword()" title="VER PASSWORD">
+                <i id="iconPassword" class="far fa-eye-slash"></i>
+            </button>
+            <label for="password">Contraseña</label>
+        </div>
+    </div>
+</div>
+<div class="row justify-content-center">
+    <div class="col-md-9">
+        <button type="submit" class="btn btn-success btn-lg btn-block">Iniciar Sesion</button>
+    </div>
+</div>
+<?= $this->form()->closeTag() ?>
+<div class="mt-5 mb-3 text-muted text-center">
+    Coordinacion de Estadistica <br>
+    <b>MALLAMAS EPS-I &copy;<?= date('Y'); ?></b>
+</div>
+<script>
+    function mostrarPassword() {
+        if ($("#password").attr('type') === "password") {
+            $("#password").attr('type', 'text');
+            $('#iconPassword').removeClass('far fa-eye-slash').addClass('far fa-eye');
+        } else {
+            $("#password").attr('type', 'password');
+            $('#iconPassword').removeClass('far fa-eye').addClass('far fa-eye-slash');
+        }
+    }
+</script>

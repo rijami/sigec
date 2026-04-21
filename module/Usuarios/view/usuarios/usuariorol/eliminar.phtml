@@ -1,0 +1,76 @@
+<?php
+$this->formUsuarioRol->prepare();
+echo $this->form()->openTag($this->formUsuarioRol);
+?>
+<div class="modal-body ui-front" style="max-height: 450px; overflow-y: auto;">
+    <div class="container-fluid">
+        <fieldset>
+            <legend>Informacion del Usuario </legend> <hr>
+            <div class="form-row">
+                <div class="form-group col-md-6 col-sm-6">
+                    <?= $this->formLabel($this->formUsuarioRol->get('identificacion')) ?>
+                    <div class="input-group" >  
+                        <?= $this->formElement($this->formUsuarioRol->get('identificacion')) ?>
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i class="fas fa-user"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group col-md-6 col-sm-6">
+                    <?= $this->formLabel($this->formUsuarioRol->get('idUsuario')) ?>
+                    <div class="input-group">  
+                        <?= $this->formElement($this->formUsuarioRol->get('idUsuario')) ?>
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i class="fas fa-users"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group col-md-12 col-sm-12">
+                    <?= $this->formLabel($this->formUsuarioRol->get('empleado')) ?>
+                    <div class="input-group" >  
+                        <?= $this->formElement($this->formUsuarioRol->get('empleado')) ?>
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i class="fas fa-user"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <legend>Informacion del Rol </legend> <hr>
+            <div class="form-row">
+                <div class="form-group col-md-6 col-sm-6">
+                    <label for="idRol" class="font-weight-bold">ID Rol</label>
+                    <div class="input-group">
+                        <input type="text" id="idRol" name="idRol" value="<?= $infoRol['idRol'] ?>" style="color: dodgerblue;" class="form-control font-weight-bold" readonly>
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i class="fas fa-id-card"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group col-md-6 col-sm-6">
+                    <label for="rol" class="font-weight-bold">Rol</label>
+                    <div class="input-group">
+                        <input type="text" id="rol" name="rol" value="<?= $infoRol['rol'] ?>"  class="form-control font-weight-bold" readonly>
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i class="fas fa-id-card"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+    </div>
+</div>
+<div class="modal-footer">
+    <button type="submit" class="btn btn-warning" title="ELIMINAR ROL DE USUARIO" ><i style="color: red" class="fas fa-times-circle"></i> Eliminar Rol Asociado</button>
+    <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="far fa-times-circle"></i> Cerrar</button>
+</div>
+<?= $this->form()->closeTag(); ?>

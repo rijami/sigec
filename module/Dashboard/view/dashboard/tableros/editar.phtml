@@ -1,0 +1,185 @@
+<?php
+$this->formHistoriaUsuario->prepare();
+$this->formHistoriaUsuario->setAttribute('action', $this->url('dashboard/historias', ['action' => 'editar', 'query' => ['idHistoria' => $this->formHistoriaUsuario->get('idHistoria')->getValue()]]));
+echo $this->form()->openTag($this->formHistoriaUsuario);
+?>
+<div class="modal-body ui-front" style="max-height: 450px; overflow-y: auto;">
+    <div class="container-fluid">
+        <fieldset>
+            <legend>Información de la Historia de Usuario</legend><hr>
+            <div class="form-row">
+                <div class="form-group col-md-6 col-sm-6">
+                    <?= $this->formLabel($this->formHistoriaUsuario->get('idHistoria')) ?>
+                    <div class="input-group">
+                        <?= $this->formElement($this->formHistoriaUsuario->get('idHistoria')) ?>
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i class="fas fa-id-badge"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group col-md-6 col-sm-6">
+                    <?= $this->formLabel($this->formHistoriaUsuario->get('codigo')) ?>
+                    <div class="input-group">
+                        <?= $this->formElement($this->formHistoriaUsuario->get('codigo')) ?>
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i class="fas fa-hashtag"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-12 col-sm-12">
+                    <?= $this->formLabel($this->formHistoriaUsuario->get('nombre')) ?>
+                    <div class="input-group">
+                        <?= $this->formElement($this->formHistoriaUsuario->get('nombre')) ?>
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i class="fas fa-heading"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-12 col-sm-12">
+                    <?= $this->formLabel($this->formHistoriaUsuario->get('descripcion')) ?>
+                    <div class="input-group">
+                        <?= $this->formElement($this->formHistoriaUsuario->get('descripcion')) ?>
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i class="fas fa-file-alt"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-6 col-sm-6">
+                    <?= $this->formLabel($this->formHistoriaUsuario->get('idProyecto')) ?>
+                    <div class="input-group">
+                        <?= $this->formElement($this->formHistoriaUsuario->get('idProyecto')) ?>
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i class="fas fa-project-diagram"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group col-md-6 col-sm-6">
+                    <?= $this->formLabel($this->formHistoriaUsuario->get('puntos_esfuerzo')) ?>
+                    <div class="input-group">
+                        <?= $this->formElement($this->formHistoriaUsuario->get('puntos_esfuerzo')) ?>
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i class="fas fa-tasks"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-6 col-sm-6">
+                    <?= $this->formLabel($this->formHistoriaUsuario->get('prioridad')) ?>
+                    <div class="input-group">
+                        <?= $this->formElement($this->formHistoriaUsuario->get('prioridad')) ?>
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i class="fas fa-flag"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group col-md-6 col-sm-6">
+                    <?= $this->formLabel($this->formHistoriaUsuario->get('estado')) ?>
+                    <div class="input-group">
+                        <?= $this->formElement($this->formHistoriaUsuario->get('estado')) ?>
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i class="fas fa-info-circle"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-12 col-sm-12">
+                    <?= $this->formLabel($this->formHistoriaUsuario->get('criterios_aceptacion')) ?>
+                    <div class="input-group">
+                        <?= $this->formElement($this->formHistoriaUsuario->get('criterios_aceptacion')) ?>
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i class="fas fa-check-double"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </fieldset><hr>
+        <fieldset>
+            <legend>Información de Trazabilidad</legend> <hr>
+            <div class="form-row">
+                <div class="form-group col-md-6 col-sm-12">
+                    <?= $this->formLabel($this->formHistoriaUsuario->get('registradopor')) ?>
+                    <div class="input-group">
+                        <?= $this->formElement($this->formHistoriaUsuario->get('registradopor')) ?>
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i class="fas fa-user-plus"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group col-md-6 col-sm-12">
+                    <?= $this->formLabel($this->formHistoriaUsuario->get('fechahorareg')) ?>
+                    <div class="input-group">
+                        <?= $this->formElement($this->formHistoriaUsuario->get('fechahorareg')) ?>
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i class="far fa-calendar-alt"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>                        
+                <div class="form-group col-md-6 col-sm-12">
+                    <?= $this->formLabel($this->formHistoriaUsuario->get('modificadopor')) ?>
+                    <div class="input-group">
+                        <?= $this->formElement($this->formHistoriaUsuario->get('modificadopor')) ?>
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i class="fas fa-user-edit"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group col-md-6 col-sm-12">
+                    <?= $this->formLabel($this->formHistoriaUsuario->get('fechahoramod')) ?>
+                    <div class="input-group">
+                        <?= $this->formElement($this->formHistoriaUsuario->get('fechahoramod')) ?>
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i class="far fa-clock"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>                        
+            </div>
+        </fieldset>
+    </div>
+</div>
+<div class="modal-footer">
+    <button type="submit" class="btn btn-success" title="ACTUALIZAR ESTA HISTORIA"  id="btnEditarHistoria" ><i class="far fa-edit"></i> Editar Historia</button>
+    <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="far fa-times-circle"></i> Cerrar</button>
+</div>
+<?= $this->form()->closeTag(); ?>
+<script>
+    $("input").keydown(function (e) {
+        if (e.which === 13) {
+            event.preventDefault();
+            return false;
+        }
+    });
+</script>

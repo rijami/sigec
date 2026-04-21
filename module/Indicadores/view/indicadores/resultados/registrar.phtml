@@ -1,0 +1,117 @@
+<?php
+// Preparamos el formulario
+$this->formResultados->prepare();
+
+// Configuramos la URL de destino (Action: registrar)
+$this->formResultados->setAttribute('action', $this->url('indicadores/resultados', ['action' => 'registrar']));
+
+// Abrimos la etiqueta del formulario
+echo $this->form()->openTag($this->formResultados);
+?>
+
+<div class="modal-body">
+    <div class="container-fluid">
+        <fieldset>
+            <legend><i class="fas fa-edit"></i> Información del Resultado</legend>
+            <hr>
+
+            <?= $this->formElement($this->formResultados->get('id_result')) ?>
+
+            <?= $this->formElement($this->formResultados->get('id_indicador')) ?>
+
+            <?= $this->formElement($this->formResultados->get('registradopor')) ?>
+            <?= $this->formElement($this->formResultados->get('FechaRegistro')) ?>
+
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                    <?= $this->formLabel($this->formResultados->get('mes')) ?>
+                    <div class="input-group">
+                        <?= $this->formElement($this->formResultados->get('mes')) ?>
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i class="fas fa-calendar-alt"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group col-md-4">
+                    <?= $this->formLabel($this->formResultados->get('num')) ?>
+                    <div class="input-group">
+                        <?= $this->formElement($this->formResultados->get('num')) ?>
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i class="fas fa-calculator"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group col-md-4">
+                    <?= $this->formLabel($this->formResultados->get('dem')) ?>
+                    <div class="input-group">
+                        <?= $this->formElement($this->formResultados->get('dem')) ?>
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i class="fas fa-calculator"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <?= $this->formLabel($this->formResultados->get('resultado')) ?>
+                    <div class="input-group">
+                        <?= $this->formElement($this->formResultados->get('resultado')) ?>
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i class="fas fa-percentage"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group col-md-6">
+                    <?= $this->formLabel($this->formResultados->get('analisis')) ?>
+                    <div class="input-group">
+                        <?= $this->formElement($this->formResultados->get('analisis')) ?>
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i class="fas fa-head-side-virus"></i>
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="text-danger small">
+                        <?= $this->formElementErrors($this->formResultados->get('analisis')) ?>
+                    </div>
+                </div>
+            </div>
+
+        </fieldset>
+    </div>
+</div>
+
+<div class="modal-footer">
+    <button type="submit" class="btn btn-primary" title="GUARDAR RESULTADO">
+        <i class="fas fa-save"></i> Guardar
+    </button>
+    <button type="button" class="btn btn-secondary" data-dismiss="modal" title="CANCELAR">
+        <i class="far fa-times-circle"></i> Cancelar
+    </button>
+</div>
+
+<?= $this->form()->closeTag(); ?>
+
+<script>
+
+    $("input").keydown(function (e) {
+        if (e.which === 13) {
+            event.preventDefault();
+            return false;
+        }
+    });
+
+
+    setTimeout(function () {
+        $('#descripcion').focus();
+    }, 500);
+</script>

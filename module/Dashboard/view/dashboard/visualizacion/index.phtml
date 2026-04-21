@@ -1,0 +1,187 @@
+<?php
+$flash = $this->flashMessenger();
+$notificaciones = [
+    'success' => array_merge($flash->getSuccessMessages(), $flash->getCurrentSuccessMessages()),
+    'error' => array_merge($flash->getErrorMessages(), $flash->getCurrentErrorMessages()),
+    'alert' => array_merge($flash->getMessages(), $flash->getCurrentMessages()),
+    'information' => array_merge($flash->getInfoMessages(), $flash->getCurrentInfoMessages()),
+    'warning' => array_merge($flash->getWarningMessages(), $flash->getCurrentWarningMessages()),
+];
+$flash->clearCurrentMessages('default');
+$flash->clearCurrentMessages('info');
+$flash->clearCurrentMessages('success');
+$flash->clearCurrentMessages('warning');
+$flash->clearCurrentMessages('error');
+$mostrarMensajes = '';
+foreach (array_filter($notificaciones) as $tipo => $mensajes) {
+    $tipoToastr = 'info';
+    $titulo = 'SwApp';
+    switch ($tipo) {
+        case 'success':
+            $titulo = ' OK ';
+            $tipoToastr = 'success';
+            break;
+        case 'error':
+            $titulo = ' ERROR ';
+            $tipoToastr = 'error';
+            break;
+        case 'alert':
+            $titulo = ' ALERTA ';
+            $tipoToastr = 'warning';
+            break;
+        case 'information':
+            $titulo = ' INFORMACION ';
+            $tipoToastr = 'info';
+            break;
+        case 'warning':
+            $titulo = ' PRECAUCION ';
+            $tipoToastr = 'warning';
+            break;
+    }
+    foreach ($mensajes as $mensaje) {
+        $mostrarMensajes .= "toastr.$tipoToastr('$mensaje', '$titulo', {
+                closeButton: true,
+                debug: false,
+                newestOnTop: false,
+                progressBar: true,
+                positionClass: 'toast-top-full-width',
+                preventDuplicates: false,
+                onclick: null,
+                showDuration: '300',
+                hideDuration: '1000',
+                timeOut: '8000',
+                extendedTimeOut: '1000',
+                showEasing: 'swing',
+                hideEasing: 'linear',
+                showMethod: 'fadeIn',
+                hideMethod: 'fadeOut'
+            }); ";
+    }
+}
+
+$title = 'Historias de Usuario';
+$this->headTitle($title);
+$this->headLink()->prependStylesheet($this->basePath('/css/select2.min.css'));
+
+// AQUÍ ESTÁ EL CAMBIO IMPORTANTE EN EL JAVASCRIPT
+$this->headScript()->prependScript('
+            // Variable global para controlar el cierre
+            window.cierreProgramado = false;
+
+            $(document).ajaxStop($.unblockUI);
+            $(document).ready(function() {
+                $("#tabla").DataTable({
+                    responsive: false,
+                    iDisplayLength: 25,
+                    sPaginationType: "full_numbers",
+                    oLanguage: {
+                        sLengthMenu: "Mostrar: _MENU_ registros por pagina",
+                        sZeroRecords: "NO SE HA ENCONTRADO INFORMACION",
+                        sInfo: "Mostrando <b>_START_</b> a <b>_END_</b> registros <br>TOTAL REGISTROS: <b>_TOTAL_</b> Registros</b>",
+                        sInfoEmpty: "Mostrando 0 A 0 registros",
+                        sInfoFiltered: "(Filtrados de un total de <b>_MAX_</b> registros)",
+                        sLoadingRecords: "CARGANDO...",
+                        sProcessing: "EN PROCESO...",
+                        sSearch: "Buscar:",
+                        sEmptyTable: "NO HAY INFORMACION DISPONIBLE PARA LA TABLA",
+                        oPaginate: {
+                            sFirst: "<i class=\'fa fa-fast-backward\' aria-hidden=\'true\' title=\'Inicio\'></i>",
+                            sPrevious: "<i class=\'fa fa-step-backward\' aria-hidden=\'true\' title=\'Anterior\'></i>",
+                            sNext: "<i class=\'fa fa-step-forward\' aria-hidden=\'true\' title=\'Siguiente\'></i>",
+                            sLast: "<i class=\'fa fa-fast-forward\' aria-hidden=\'true\' title=\'Fin\'></i>",
+                        }
+                    },
+                    aaSorting: [[0, "desc"]]
+                });
+
+                // Lógica corregida para el cierre del modal
+                $("#modalFormulario").on("hide.bs.modal", function (e) {
+                    // Si el cierre viene del AJAX (guardado exitoso), dejar pasar
+                    if (window.cierreProgramado === true) {
+                        return true;
+                    }
+
+                    // Si es manual, evitar el cierre y preguntar
+                    e.preventDefault();
+                    
+                    Swal.fire({
+                        title: "&iquest;DESEA CERRAR EL FORMULARIO?",
+                        text: "Se perderán los datos no guardados.",
+                        icon: "question",
+                        showCancelButton: true,
+                        confirmButtonText: "Si, cerrar",
+                        cancelButtonText: "No, continuar",
+                        allowOutsideClick: false
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            // Autorizar cierre y cerrar manualmente
+                            window.cierreProgramado = true;
+                            $("#modalFormulario").modal("hide");
+                        }
+                    });
+                });
+
+                // Resetear la variable cuando el modal esté completamente cerrado
+                $("#modalFormulario").on("hidden.bs.modal", function () {
+                    window.cierreProgramado = false;
+                });
+
+                ' . $mostrarMensajes . '
+            });', 'text/javascript', array('noescape' => true))
+    ->prependFile($this->basePath('/js/sistema/historias_usuario.js'))
+    ->prependFile($this->basePath('/js/select2.min.js'));
+?>
+<div class="container bg-white rounded-lg shadow-sm p-4 border">
+    <div class="row">
+        <div class="col-md-8 col-sm-8">
+            <legend class="display-5">Tablero de <?= $this->infotablero['nombre'] ?></legend>
+            <hr>
+        </div>
+    </div>
+    <iframe width="100%" height="600" src="<?= $this->infotablero['enlace'] ?>" frameborder="0" allowFullScreen="true">
+    </iframe>
+</div> <br>
+<div id="msgBloqueo" style="display: none;">
+    SU SOLICITUD ESTA SIENDO PROCESADA, POR FAVOR ESPERE...
+</div>
+
+<div class="modal fade" id="modalFormulario" data-backdrop="static" tabindex="-1" aria-labelledby="lbModalFormulario"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-info text-light">
+                <h5 class="modal-title" id="lbModalFormulario">Formulario</h5>
+                <button type="button" class="close text-light" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div id="divContenido"></div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="modalFormularioAux" data-backdrop="static" tabindex="-1"
+    aria-labelledby="lbModalFormulario2" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-info text-light">
+                <h5 class="modal-title" id="lbModalFormularioAux">Formulario</h5>
+                <button type="button" class="close text-light" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div id="divContenidoAux"></div>
+        </div>
+    </div>
+</div>
+<?php
+/* echo '<script>';
+echo '$("#contHistorias").html("' . number_format(count($this->historiasUsuario)) . '");';
+echo '</script>'; */
+?>
+<script>
+    // Mover los modales al body para evitar el error de aria-hidden
+    $(document).ready(function () {
+        $('#modalFormulario').appendTo("body");
+        $('#modalFormularioAux').appendTo("body");
+    });
+</script>

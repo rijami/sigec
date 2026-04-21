@@ -1,0 +1,102 @@
+<?php
+$this->formHistoriaUsuario->prepare();
+echo $this->form()->openTag($this->formHistoriaUsuario);
+
+?>
+<div class="modal-body ui-front" style="max-height: 450px; overflow-y: auto;">
+    <div class="container-fluid">
+        <fieldset>
+            <legend>Confirmar Eliminación de Historia de Usuario</legend><hr>
+            <div class="form-row">
+              <div class="form-group col-md-6 col-sm-6">
+                    <?= $this->formLabel($this->formHistoriaUsuario->get('idHistoria')) ?>
+                    <div class="input-group input-group-sm">
+                        <?= $this->formElement($this->formHistoriaUsuario->get('idHistoria')) ?>
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i class="fas fa-hashtag"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group col-md-6 col-sm-6">
+                    <?= $this->formLabel($this->formHistoriaUsuario->get('codigo')) ?>
+                    <div class="input-group input-group-sm">
+                        <?= $this->formElement($this->formHistoriaUsuario->get('codigo')) ?>
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i class="fas fa-hashtag"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-12 col-sm-12">
+                    <?= $this->formLabel($this->formHistoriaUsuario->get('nombre')) ?>
+                    <div class="input-group input-group-sm">
+                        <?= $this->formElement($this->formHistoriaUsuario->get('nombre')) ?>
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i class="fas fa-heading"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-12 col-sm-12">
+                    <?= $this->formLabel($this->formHistoriaUsuario->get('descripcion')) ?>
+                    <div class="input-group input-group-sm">
+                        <?= $this->formElement($this->formHistoriaUsuario->get('descripcion')) ?>
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i class="fas fa-file-alt"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-6 col-sm-6">
+                    <?= $this->formLabel($this->formHistoriaUsuario->get('idProyecto')) ?>
+                    <div class="input-group input-group-sm">
+                        <?= $this->formElement($this->formHistoriaUsuario->get('idProyecto')) ?>
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i class="fas fa-project-diagram"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group col-md-6 col-sm-6">
+                    <?= $this->formLabel($this->formHistoriaUsuario->get('estado')) ?>
+                    <div class="input-group input-group-sm">
+                        <?= $this->formElement($this->formHistoriaUsuario->get('estado')) ?>
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i class="fas fa-info-circle"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="alert alert-danger text-center mt-3" role="alert">
+                <i class="fas fa-exclamation-triangle"></i> Esta acción cambiará el estado de la historia a "Eliminado" y es irreversible.
+            </div>
+        </fieldset>
+    </div>
+</div>
+<div class="modal-footer">
+    <button type="submit" class="btn btn-danger" title="CONFIRMAR ELIMINACIÓN LÓGICA"  id="btnEliminarHistoria" ><i class="fas fa-trash-alt"></i> Confirmar Eliminación</button>
+    <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="far fa-times-circle"></i> Cancelar</button>
+</div>
+<?= $this->form()->closeTag(); ?>
+<script>
+    $("input").keydown(function (e) {
+        if (e.which === 13) {
+            event.preventDefault();
+            return false;
+        }
+    });
+</script>
