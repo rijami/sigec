@@ -16,7 +16,7 @@ $servidor = $host . ',' . $port;   // formato aceptado por sqlsrv
 return [
     'db' => [
         'driver'         => 'Pdo',
-        'dsn'            => 'sqlsrv:Server=' . $servidor . ';Database=' . $dbname,
+        'dsn'            =>'sqlsrv:Server=' . $servidor . ';Database=' . $dbname . ';TrustServerCertificate=1',
         'driver_options' => [
             PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
         ],
