@@ -33,8 +33,8 @@ RUN docker-php-ext-configure intl \
         mbstring \
         pdo
 
-# Driver PHP para SQL Server via PECL
-RUN pecl install sqlsrv pdo_sqlsrv \
+# Driver PHP para SQL Server via PECL (5.12.0 = última versión compatible con PHP 8.1)
+RUN pecl install sqlsrv-5.12.0 pdo_sqlsrv-5.12.0 \
     && docker-php-ext-enable sqlsrv pdo_sqlsrv
 
 # ─── Configuración de Apache ─────────────────────────────────────────────────
