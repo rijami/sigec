@@ -1,4 +1,4 @@
-FROM php:8.1-apache
+FROM php:8.2-apache
 
 LABEL maintainer="SIGEC - Mallamas EPS"
 
@@ -13,6 +13,7 @@ RUN apt-get update && apt-get install -y \
     libzip-dev \
     zlib1g-dev \
     libonig-dev \
+    libgd-dev \
     unixodbc-dev \
     && rm -rf /var/lib/apt/lists/*
 
@@ -27,13 +28,15 @@ RUN curl -fsSL https://packages.microsoft.com/keys/microsoft.asc \
 
 # ─── Extensiones PHP ─────────────────────────────────────────────────────────
 RUN docker-php-ext-configure intl \
+    && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install \
         intl \
         zip \
         mbstring \
-        pdo
+        pdo \
+        gd
 
-# Driver PHP para SQL Server via PECL (5.12.0 = última versión compatible con PHP 8.1)
+# Driver PHP para SQL Server via PECL (5.12.0 = compatible con PHP 8.1 y 8.2, máx < 8.3)
 RUN pecl install sqlsrv-5.12.0 pdo_sqlsrv-5.12.0 \
     && docker-php-ext-enable sqlsrv pdo_sqlsrv
 
