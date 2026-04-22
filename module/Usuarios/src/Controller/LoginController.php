@@ -18,7 +18,6 @@ class LoginController extends AbstractActionController
 
     private $DAO;
     private ?IdentityManager $identityManager;
-    private $rutaLog = '/var/log/sigec/';
 
     //------------------------------------------------------------------------------
 
@@ -51,9 +50,7 @@ class LoginController extends AbstractActionController
                 // exit();
                 if ($this->identityManager->login($login, $password)) {
                     //--
-                    $file = fopen($this->rutaLog . 'app.log', 'a');
-                    fwrite($file, "USUARIO LOGINEADO: " . $login . " - " . date('Y-m-d H:i:s') . "\n");
-                    fclose($file);
+                    error_log('[SIGEC] Usuario logueado: ' . $login);
                     //--
                     $fechaultingreso = '0000-00-00 00:00:00';
                     $contFallidos = 0;
@@ -65,12 +62,7 @@ class LoginController extends AbstractActionController
                         }
                         $this->DAO->setFechaUltIngreso($login);
                     } catch (\Exception $ex) {
-                        $msgLog = "\n" . date('Y-m-d H:i:s') . " LOGIN OK - LoginController->login \n"
-                            . $ex->getMessage()
-                            . "\n----------------------------------------------------------------------- \n";
-                        $file = fopen($this->rutaLog . 'josandro.log', 'a');
-                        fwrite($file, $msgLog);
-                        fclose($file);
+                        error_log('[SIGEC] LOGIN OK - auditoria: ' . $ex->getMessage());
                     }
                     $container = new Container();
                     if (isset($container->fechaultingreso)) {
@@ -90,12 +82,7 @@ class LoginController extends AbstractActionController
                     try {
                         $this->DAO->setLoginFallido($login);
                     } catch (\Exception $ex) {
-                        $msgLog = "\n" . date('Y-m-d H:i:s') . " LOGIN FALLIDO - LoginController->login \n"
-                            . $ex->getMessage()
-                            . "\n----------------------------------------------------------------------- \n";
-                        $file = fopen($this->rutaLog . 'app.log', 'a');
-                        fwrite($file, $msgLog);
-                        fclose($file);
+                        error_log('[SIGEC] LOGIN FALLIDO: ' . $ex->getMessage());
                     }
                     $this->flashMessenger()->addErrorMessage("USUARIO O CLAVE INCORRECTO");
                 }

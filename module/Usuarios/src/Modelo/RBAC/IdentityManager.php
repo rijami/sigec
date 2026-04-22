@@ -38,23 +38,14 @@ class IdentityManager
         $this->auth->setAdapter($this->adapter);
         $result = $this->auth->authenticate();
         if ($result->isValid()) {
-            error_log('EL USUARIO ' . $result->getIdentity() . ' HA INICIADO SESION');
-
-            $file = fopen('/var/log/sigec/app.log', 'a');
-                    fwrite($file, 'EL USUARIO ' . $result->getIdentity() . ' HA INICIADO SESION' . "\n");
-                    fclose($file);
-
+            error_log('[SIGEC] Usuario autenticado: ' . $result->getIdentity());
             $this->auth->getStorage()->write($this->adapter->getResultRowObject(null, 'password'));
             $this->cargarDatosAutorizacion($result->getIdentity());
             return true;
         } else {
-            $file = fopen('/var/log/sigec/app.log', 'a');
             foreach ($result->getMessages() as $msg) {
-//                error_log($msg);
-                    fwrite($file, $msg . "\n");
-
+                error_log('[SIGEC] Login fallido: ' . $msg);
             }
-                    fclose($file);
         }
         return false;
     }
