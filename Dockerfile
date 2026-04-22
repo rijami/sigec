@@ -49,7 +49,19 @@ RUN a2enmod rewrite \
         s/AllowOverride None/AllowOverride All/' \
         /etc/apache2/apache2.conf
 
+# ─── Configuración PHP para producción ───────────────────────────────────────
+RUN { \
+    echo 'display_errors = Off'; \
+    echo 'display_startup_errors = Off'; \
+    echo 'error_reporting = E_ALL & ~E_DEPRECATED & ~E_NOTICE & ~E_STRICT'; \
+    echo 'log_errors = On'; \
+    echo 'error_log = /var/log/sigec/php-errors.log'; \
+    echo 'opcache.enable = 1'; \
+    echo 'opcache.memory_consumption = 128'; \
+} > /usr/local/etc/php/conf.d/sigec-production.ini
+
 # ─── Composer 2 ──────────────────────────────────────────────────────────────
+
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
 # ─── Código de la aplicación ─────────────────────────────────────────────────
