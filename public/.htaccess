@@ -1,6 +1,4 @@
 RewriteEngine On
-php_flag display_errors On
-php_value error_reporting 32767
 
 
 # The following rule tells Apache that if the requested filename

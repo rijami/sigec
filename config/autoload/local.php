@@ -9,7 +9,7 @@
  */
 
 $username = getenv('DB_USER') ?: 'Estadistica';
-$password = getenv('DB_PASS') ?: '';
+$password = getenv('DB_PASS') ?: 'Estadistica*2025';
 
 return [
     'db' => [
