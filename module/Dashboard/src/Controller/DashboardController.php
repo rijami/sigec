@@ -17,7 +17,7 @@ class DashboardController extends AbstractActionController
 {
 
     private $DAO;
-    private $rutaLog = 'C:/LOGS/';
+    private $rutaLog = '/var/log/sigec/';
 
     //------------------------------------------------------------------------------
 

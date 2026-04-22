@@ -18,7 +18,7 @@ class LoginController extends AbstractActionController
 
     private $DAO;
     private ?IdentityManager $identityManager;
-    private $rutaLog = 'C:/LOGS/';
+    private $rutaLog = '/var/log/sigec/';
 
     //------------------------------------------------------------------------------
 

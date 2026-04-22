@@ -16,7 +16,7 @@ class BandejaController extends AbstractActionController
     private $DAO;
     private $SESSION = null;
     private $RBAC = null;
-    private $rutaLog = 'C:/LOGS/';
+    private $rutaLog = '/var/log/sigec/';
 
     //------------------------------------------------------------------------------
 

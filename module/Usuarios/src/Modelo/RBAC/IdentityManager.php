@@ -40,7 +40,7 @@ class IdentityManager
         if ($result->isValid()) {
             error_log('EL USUARIO ' . $result->getIdentity() . ' HA INICIADO SESION');
 
-            $file = fopen('C:/LOGS/app.log', 'a');
+            $file = fopen('/var/log/sigec/app.log', 'a');
                     fwrite($file, 'EL USUARIO ' . $result->getIdentity() . ' HA INICIADO SESION' . "\n");
                     fclose($file);
 
@@ -48,7 +48,7 @@ class IdentityManager
             $this->cargarDatosAutorizacion($result->getIdentity());
             return true;
         } else {
-            $file = fopen('C:/LOGS/app.log', 'a');
+            $file = fopen('/var/log/sigec/app.log', 'a');
             foreach ($result->getMessages() as $msg) {
 //                error_log($msg);
                     fwrite($file, $msg . "\n");

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Layout;
 
 use Laminas\Router\Http\Literal;
+use Laminas\Router\Http\Segment;
 use Usuarios\Controller\LoginController;
 
 return [

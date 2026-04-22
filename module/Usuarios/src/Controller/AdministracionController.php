@@ -17,7 +17,7 @@ class AdministracionController extends AbstractActionController
 {
 
     private $DAO;
-    private $rutaLog = 'C:/LOGS/';
+    private $rutaLog = '/var/log/sigec/';
 
     //------------------------------------------------------------------------------
 
