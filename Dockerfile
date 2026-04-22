@@ -58,7 +58,9 @@ WORKDIR /var/www
 COPY . .
 
 # Instalar dependencias PHP en modo producción
-RUN composer install --no-dev --optimize-autoloader --no-interaction
+RUN composer install --no-dev --optimize-autoloader --no-interaction \
+    --ignore-platform-req=php \
+    --ignore-platform-req=ext-gd
 
 # ─── Directorios requeridos y permisos ───────────────────────────────────────
 RUN mkdir -p data/cache data/logs data/sessions /var/log/sigec \
