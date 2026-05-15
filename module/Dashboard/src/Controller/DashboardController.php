@@ -164,85 +164,86 @@ class DashboardController extends AbstractActionController
      */
     public function editarAction()
     {
-        $idHistoria = (int) $this->params()->fromQuery('idHistoria', $this->params()->fromPost('idHistoria', 0));
+        $idTablero = (int) $this->params()->fromQuery('idTablero', $this->params()->fromPost('idTablero', 0));
 
-        if ($idHistoria === 0) {
-            $this->flashMessenger()->addErrorMessage('No se proporcionó un ID de historia de usuario válido para edición.');
-            return $this->redirect()->toRoute('dashboard/historias', ['action' => 'index']);
+        if ($idTablero === 0) {
+            $this->flashMessenger()->addErrorMessage('No se proporcionó un ID de tablero válido para edición.');
+            return $this->redirect()->toRoute('dashboard/tableros', ['action' => 'index']);
         }
 
-        $infoHistoria = $this->DAO->getHistoriaUsuariobyId($idHistoria);
+        $infoTablero = $this->DAO->getTablerobyId($idTablero);
 
-        if (empty($infoHistoria)) {
-            $this->flashMessenger()->addErrorMessage('La historia de usuario a editar no se encuentra registrada.');
-            return $this->redirect()->toRoute('dashboard/historias', ['action' => 'index']);
+        if (empty($infoTablero)) {
+            $this->flashMessenger()->addErrorMessage('El tablero a editar no se encuentra registrado.');
+            return $this->redirect()->toRoute('dashboard/tableros', ['action' => 'index']);
         }
 
-        $proyectosRaw = $this->DAO->getProyectos();
-        $listaProyectos = ['' => 'Seleccione un proyecto...'];
-        foreach ($proyectosRaw as $proyecto) {
-            $listaProyectos[$proyecto['idProyecto']] = $proyecto['nombre'];
+        $procesos = $this->DAO->getProcesos();
+        $listaProcesos = ['' => 'Seleccione un Proceso...'];
+        foreach ($procesos as $proceso) {
+            $listaProcesos[$proceso['idProceso']] = $proceso['Proceso'];
         }
-
-        $listaPrioridades = ['Critica' => 'Crítica', 'Alta' => 'Alta', 'Media' => 'Media', 'Baja' => 'Baja'];
-        $listaEstados = ['Registrado' => 'Registrado', 'En proceso' => 'En Proceso', 'Terminado' => 'Terminado'];
-
-        $formHistoriaUsuario = new HistoriaUsuarioForm('editar', $listaProyectos, $listaPrioridades, $listaEstados);
+        $coordinaciones = $this->DAO->getCoordinaciones();
+        $listaCoordinaciones = ['' => 'Seleccione una Coordinación...'];
+        foreach ($coordinaciones as $coordinacion) {
+            $listaCoordinaciones[$coordinacion['idCoordinacion']] = $coordinacion['Coordinacion'];
+        }
+        $formTablero = new TableroForm('editar', $listaProcesos, $listaCoordinaciones);
         $request = $this->getRequest();
 
         if (!$request->isPost()) {
-            $formHistoriaUsuario->setData($infoHistoria);
+            $formTablero->setData($infoTablero);
             $view = new ViewModel([
-                'formHistoriaUsuario' => $formHistoriaUsuario,
+                'formTablero' => $formTablero,
             ]);
             $view->setTerminal(true);
             return $view;
         }
 
-        $idHistoriaFromPost = (int) $request->getPost('idHistoria');
-        $idHistoria = ($idHistoriaFromPost !== 0) ? $idHistoriaFromPost : $idHistoria;
+        $idTableroFromPost = (int) $request->getPost('idTablero');
+        $idTablero = ($idTableroFromPost !== 0) ? $idTableroFromPost : $idTablero;
 
-        $historiaUsuarioOBJ = new HistoriaUsuario();
-        $formHistoriaUsuario->setInputFilter($historiaUsuarioOBJ->getInputFilter());
-        $formHistoriaUsuario->setData($request->getPost());
+        $tableroOBJ = new Tablero();
+        $formTablero->setInputFilter($tableroOBJ->getInputFilter());
+        $formTablero->setData($request->getPost());
 
-        if (!$formHistoriaUsuario->isValid()) {
-            error_log(print_r($formHistoriaUsuario->getMessages(), true));
+        if (!$formTablero->isValid()) {
+            error_log(print_r($formTablero->getMessages(), true));
             if ($request->isXmlHttpRequest()) {
                 return new JsonModel([
                     'success' => false,
-                    'messages' => $formHistoriaUsuario->getMessages(),
-                    'globalMessage' => 'LA INFORMACION DE EDICION DE LA HISTORIA DE USUARIO NO ES VALIDA.'
+                    'messages' => $formTablero->getMessages(),
+                    'globalMessage' => 'LA INFORMACION DE EDICION DEL TABLERO NO ES VALIDA.'
                 ]);
             } else {
-                $this->flashMessenger()->addErrorMessage('LA INFORMACION DE EDICION DE LA HISTORIA DE USUARIO NO ES VALIDA.');
-                return $this->redirect()->toRoute('dashboard/historias', ['action' => 'index']);
+                $this->flashMessenger()->addErrorMessage('LA INFORMACION DE EDICION DEL TABLERO NO ES VALIDA.');
+                return $this->redirect()->toRoute('dashboard/tableros', ['action' => 'index']);
             }
         }
 
         try {
-            $historiaUsuarioOBJ->exchangeArray($formHistoriaUsuario->getData());
+            $tableroOBJ->exchangeArray($formTablero->getData());
             $infoSesion = $this->getInfoSesion();
 
-            $historiaUsuarioOBJ->setIdHistoria($idHistoria);
+            $tableroOBJ->setIdTablero($idTablero);
 
-            $historiaUsuarioOBJ->setModificadopor($infoSesion['login']);
-            $historiaUsuarioOBJ->setFechahoramod(date('Y-m-d H:i:s'));
+            $tableroOBJ->setModificadopor($infoSesion['login']);
+            $tableroOBJ->setFechahoramod(date('Y-m-d H:i:s'));
 
-            $this->DAO->editar($historiaUsuarioOBJ);
+            $this->DAO->editar($tableroOBJ);
             if ($request->isXmlHttpRequest()) {
                 return new \Laminas\View\Model\JsonModel([
                     'success' => true,
-                    'globalMessage' => 'EL INDICADOR FUE ACTUALIZADO EXITOSAMENTE.'
+                    'globalMessage' => 'EL TABLERO FUE ACTUALIZADO EXITOSAMENTE.'
                 ]);
             }
         } catch (Exception $ex) {
-            $msgLog = "\n" . date('Y-m-d H:i:s') . " EDITAR HISTORIA USUARIO - HistoriasController->editar \n"
+            $msgLog = "\n" . date('Y-m-d H:i:s') . " EDITAR TABLERO - TablerosController->editar \n"
                 . $ex->getMessage()
                 . "\n----------------------------------------------------------------------- \n";
             file_put_contents($this->rutaLog . 'dashboard.log', $msgLog, FILE_APPEND);
             if ($request->isXmlHttpRequest()) {
-                $errorMessage = 'SE HA PRESENTADO UN INCONVENIENTE! <br>LA HISTORIA DE USUARIO NO FUE ACTUALIZADA.';
+                $errorMessage = 'SE HA PRESENTADO UN INCONVENIENTE! <br>EL TABLERO NO FUE ACTUALIZADO.';
                 if ($ex->getCode() == 23000) {
                     $errorMessage = 'Error: Ya existe una historia de usuario con ese código. Por favor, use otro.';
                 }
@@ -251,10 +252,10 @@ class DashboardController extends AbstractActionController
                     'globalMessage' => $errorMessage
                 ]);
             } else {
-                $this->flashMessenger()->addErrorMessage('SE HA PRESENTADO UN INCONVENIENTE! <br>LA HISTORIA DE USUARIO NO FUE ACTUALIZADA.');
+                $this->flashMessenger()->addErrorMessage('SE HA PRESENTADO UN INCONVENIENTE! <br>EL TABLERO NO FUE ACTUALIZADO.');
             }
         }
-        return $this->redirect()->toRoute('dashboard/historias', ['action' => 'index']);
+        return $this->redirect()->toRoute('dashboard/tableros', ['action' => 'index']);
     }
     //------------------------------------------------------------------------------
 

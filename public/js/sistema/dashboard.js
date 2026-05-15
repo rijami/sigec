@@ -127,19 +127,19 @@ function validarRegistrar(evt, formulario) {
 }
 //------------------------------------------------------------------------------
 
-function verEditarIndicador(id_indicador) {
+function verEditartablero(idTablero) {
     $.ajax({
         url: "editar",
         dataType: "html",
-        data: { id_indicador: id_indicador },
+        data: { idTablero: idTablero },
         success: function (html) {
             $("#divContenido").html(html);
-            $('#lbModalFormulario').html('<i class="fas fa-edit fa-lg" style="color: dodgerblue"></i> &nbsp; EDITAR INDICADOR');
+            $('#lbModalFormulario').html('<i class="fas fa-edit fa-lg" style="color: dodgerblue"></i> &nbsp; EDITAR TABLERO');
             $('#modalFormulario').modal('show');
         },
         error: function (jqXHR, textStatus, errorThrown) {
-            console.error("Error al cargar formulario de edición de indicador: ", textStatus, errorThrown, jqXHR);
-            mostrarMensajesToastr({ success: false, globalMessage: 'No se pudo cargar el formulario de edición de indicador.' });
+            console.error("Error al cargar formulario de edición de tablero: ", textStatus, errorThrown, jqXHR);
+            mostrarMensajesToastr({ success: false, globalMessage: 'No se pudo cargar el formulario de edición de tablero.' });
         },
         complete: function () {
             $.unblockUI();

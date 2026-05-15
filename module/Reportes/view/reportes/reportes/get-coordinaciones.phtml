@@ -1,0 +1,6 @@
+<option value="">Seleccione una coordinación...</option>
+<?php
+foreach ($this->coordinaciones as $coordinacion) {
+    echo '<option value="' . $coordinacion['idCoordinacion'] . '">' . $coordinacion['Coordinacion'] . '</option>';
+}
+?>

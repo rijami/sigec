@@ -175,7 +175,33 @@ $this->headScript()->prependScript('
                             echo '<td class="text-center align-middle">' . $usuario['empleado'] . '</td>';
                             echo '<td class="text-center align-middle">' . $usuario['roles'] . '</td>';
                             echo '<td class="text-center align-middle">' . $usuario['fechaultingreso'] . '</td>';
-                            echo '<td class="text-center align-middle">' . $usuario['estadoU'] . '</td>';
+
+                            $estado = $usuario['estadoU'] ?? 'N/A';
+
+                            switch ($estado) {
+
+                                case 'Bloqueado':
+                                    $clase = 'badge badge-danger';
+                                    break;
+
+                                case 'Con Informacion':
+                                    $clase = 'badge badge-warning';
+                                    break;
+
+                                case 'Activo':
+                                    $clase = 'badge badge-success';
+                                    break;
+
+                                default:
+                                    $clase = 'badge badge-secondary';
+                                    break;
+                            }
+
+                            echo '<td class="text-center align-middle"><span class="' . $clase . ' px-2 py-1"
+                                    style="font-size: 100%; border-radius: 10px;">
+                                    ' . ($usuario['estadoU'] ?? 'N/A') . '</span></td>';
+
+                            //echo '<td class="text-center align-middle">' . $usuario['estadoU'] . '</td>';
                             echo '</tr>';
                         }
                         ?>

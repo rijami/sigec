@@ -387,14 +387,31 @@ function checkPasswordStrength(password) {
     );
 }
 //------------------------------------------------------------------------------
+function getDirecciones() {
+    $("#idDireccion").html('<option value="">Seleccione...</option>');
+    if ($("#idProceso").val() !== '') {
+        $.ajax({
+            url: "getDirecciones",
+            dataType: "html",
+            data: {
+                idProceso: $("#idProceso").val()
+            },
+            success: function (html) {
+                $("#idDireccion").html(html);
+            }
+        });
+        bloqueoAjax();
+    }
+}
+//------------------------------------------------------------------------------
 function getCoordinaciones() {
     $("#idCoordinacion").html('<option value="">Seleccione...</option>');
-    if ($("#idProceso").val() !== '') {
+    if ($("#idDireccion").val() !== '') {
         $.ajax({
             url: "getCoordinaciones",
             dataType: "html",
             data: {
-                idProceso: $("#idProceso").val()
+                idDireccion: $("#idDireccion").val()
             },
             success: function (html) {
                 $("#idCoordinacion").html(html);

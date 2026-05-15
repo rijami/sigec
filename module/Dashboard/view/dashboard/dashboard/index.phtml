@@ -203,8 +203,8 @@ $this->headScript()->prependScript('
  */                        // Se incluye 'En proceso' para que aparezcan las opciones correctamente
                         if ($tablero['estado'] !== 'Eliminado') {
                             if ($rolesUsuario['rol'] === 'SUPER_ADMINISTRADOR' || $rolesUsuario['rol'] === 'ADMINISTRADOR') {
-                              /*   echo '&nbsp;&nbsp;<a href="javascript:verEditartablero(' . $tablero['idTablero'] . ')" title="ACTUALIZAR ESTE TABLERO"><i class="fas fa-edit" style="color: #837a06"></i></a><hr>';
-                                echo '&nbsp;&nbsp;<a href="javascript:verEliminartablero(' . $tablero['idTablero'] . ')" title="ELIMINAR ESTE TABLERO"><i style="color:red" class="fas fa-times-circle"></i></a>'; */
+                              echo '&nbsp;&nbsp;<a href="javascript:verEditartablero(' . $tablero['idTablero'] . ')" title="ACTUALIZAR ESTE TABLERO"><i class="fas fa-edit" style="color: #837a06"></i></a>';
+                                /*echo '&nbsp;&nbsp;<a href="javascript:verEliminartablero(' . $tablero['idTablero'] . ')" title="ELIMINAR ESTE TABLERO"><i style="color:red" class="fas fa-times-circle"></i></a>'; */
                                 echo '&nbsp;&nbsp;<a href="javascript:verAsignar(' . $tablero['idTablero'] . ')" title="ASIGNAR USUARIO A ESTE TABLERO"><i class="fas fa-user-plus" style="color: #837a06"></i></a>';
                                 //echo '&nbsp;&nbsp;<a href="../resultados/index?id_tablero=' . $tablero['idTablero'] . '" title="IR A LOS RESULTADOS DE ESTE tablero"><i class="fas fa-flag" style="color: #837a06"></i></a>';
                             } else {
@@ -222,7 +222,30 @@ $this->headScript()->prependScript('
                         echo '<td class="text-center align-middle">' . ($tablero['necesidad'] ?? 'N/A') . '</td>';
                         echo '<td class="text-center align-middle">' . ($tablero['fuentes_informacion'] ?? 'N/A') . '</td>';
                         echo '<td class="text-center align-middle">' . ($tablero['historia_usuario'] ?? 'N/A') . '</td>';
-                        echo '<td class="text-center align-middle font-weight-bold">' . ($tablero['estado'] ?? 'N/A') . '</td>';
+                       $estado = $tablero['estado'] ?? 'N/A';
+
+                            switch ($estado) {
+
+                                case 'Registrado':
+                                    $clase = 'badge badge-danger';
+                                    break;
+
+                                case 'Pendiente':
+                                    $clase = 'badge badge-warning';
+                                    break;
+
+                                case 'Cargado':
+                                    $clase = 'badge badge-success';
+                                    break;
+
+                                default:
+                                    $clase = 'badge badge-secondary';
+                                    break;
+                            }
+
+                            echo '<td class="text-center align-middle"><span class="' . $clase . ' px-2 py-1"
+                                    style="font-size: 100%; border-radius: 10px;">
+                                    ' . ($tablero['estado'] ?? 'N/A') . '</span></td>';
                         //  echo '<td class="text-center align-middle">' . ($tablero['enlace'] ?? 'N/A') . '</td>';
                         /*  echo '<td class="text-center align-middle">' . ($tablero['registradopor'] ?? 'N/A') . '</td>';
                          echo '<td class="text-center align-middle">' . $tablero['fechaRegistro'] . '</td>'; */

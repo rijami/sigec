@@ -1,43 +1,148 @@
 <?php
 
-$this->formAvanceHistoria->prepare();
+$this->formResultados->prepare();
 
 
-$this->formAvanceHistoria->setAttribute('action', $this->url('indicadores/avances', ['action' => 'eliminar', 'query' => ['idAvance' => $this->idAvance]]));
+$this->formResultados->setAttribute('action', $this->url('indicadores/resultados', ['action' => 'eliminar', 'query' => ['id_result' => $this->idResultado]]));
 
-echo $this->form()->openTag($this->formAvanceHistoria);
+echo $this->form()->openTag($this->formResultados);
 ?>
 
 <div class="modal-body ui-front" style="max-height: 450px; overflow-y: auto;">
     <div class="container-fluid">
         <fieldset>
-            <legend>Eliminar Avance</legend><hr>
-            
-            
-            <?= $this->formElement($this->formAvanceHistoria->get('idAvance')) ?>
-            
-          
-            <div class="alert alert-danger text-center mb-4" role="alert">
-                <i class="fas fa-exclamation-triangle fa-2x mb-2"></i><br>
-                <strong>¿Está seguro que desea eliminar este avance?</strong><br>
-                Esta acción borrará el registro permanentemente y no se puede deshacer.
+            <legend>Informacion del Resultado</legend>
+            <hr>
+            <div style="display:none;">
+                <?= $this->formElement($this->formResultados->get('registradopor')) ?>
+                <?= $this->formElement($this->formResultados->get('FechaRegistro')) ?>
+                <?= $this->formElement($this->formResultados->get('id_indicador')) ?>
             </div>
 
-            
+
             <div class="form-row">
-                <div class="form-group col-md-12 col-sm-12">
-                    <?= $this->formLabel($this->formAvanceHistoria->get('descripcion')) ?>
+                <div class="form-group col-md-4">
+                    <label>ID Resultado</label>
                     <div class="input-group">
-                        <?= $this->formElement($this->formAvanceHistoria->get('descripcion')) ?>
+                        <?= $this->formElement($this->formResultados->get('id_result')) ?>
+                        <div class="input-group-append">
+                            <span class="input-group-text"><i class="fas fa-hashtag"></i></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group col-md-4">
+                    <?= $this->formLabel($this->formResultados->get('num')) ?>
+                    <div class="input-group">
+                        <?= $this->formElement($this->formResultados->get('num')) ?>
                         <div class="input-group-append">
                             <span class="input-group-text">
-                                <i class="fas fa-file-alt"></i>
+                                <i class="fas fa-align-left"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group col-md-4">
+                    <?= $this->formLabel($this->formResultados->get('dem')) ?>
+                    <div class="input-group">
+                        <?= $this->formElement($this->formResultados->get('dem')) ?>
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i class="fas fa-align-left"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group col-md-8">
+                    <?= $this->formLabel($this->formResultados->get('mes')) ?>
+                    <div class="input-group">
+                        <?= $this->formElement($this->formResultados->get('mes')) ?>
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i class="fas fa-align-left"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="form-group col-md-4">
+                    <?= $this->formLabel($this->formResultados->get('resultado')) ?>
+                    <div class="input-group">
+                        <?= $this->formElement($this->formResultados->get('resultado')) ?>
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i class="fas fa-align-left"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group col-md-12">
+                    <?= $this->formLabel($this->formResultados->get('analisis')) ?>
+                    <div class="input-group">
+                        <?= $this->formElement($this->formResultados->get('analisis')) ?>
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i class="fas fa-align-left"></i>
                             </span>
                         </div>
                     </div>
                 </div>
             </div>
         </fieldset>
+        <div class="alert alert-danger text-center mt-3" role="alert">
+            <i class="fas fa-exclamation-triangle"></i> Esta acción eliminará permanentemente el resultado
+            y es irreversible.
+        </div>
+        <legend>Informacion del Registro</legend>
+        <hr>
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label>Registrado Por</label>
+                <div class="input-group">
+                    <input type="text" class="form-control"
+                        value="<?= $this->formResultados->get('registradopor')->getValue() ?>" readonly>
+                    <div class="input-group-append">
+                        <span class="input-group-text"><i class="fas fa-user"></i></span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group col-md-6">
+                <label>Fecha de Registro</label>
+                <div class="input-group">
+                    <input type="text" class="form-control"
+                        value="<?= $this->formResultados->get('FechaRegistro')->getValue() ?>" readonly>
+                    <div class="input-group-append">
+                        <span class="input-group-text"><i class="far fa-clock"></i></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <?php if ($this->formResultados->get('modificadopor')->getValue()): ?>
+            <!-- Fila 4: Modificación (Solo si existe) -->
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label>Modificado Por</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control"
+                            value="<?= $this->formResultados->get('modificadopor')->getValue() ?>" readonly>
+                        <div class="input-group-append">
+                            <span class="input-group-text"><i class="fas fa-user-edit"></i></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group col-md-6">
+                    <label>Fecha de Modificación</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control"
+                            value="<?= $this->formResultados->get('fechahoramod')->getValue() ?>" readonly>
+                        <div class="input-group-append">
+                            <span class="input-group-text"><i class="far fa-clock"></i></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <?php endif; ?>
     </div>
 </div>
 
@@ -53,7 +158,7 @@ echo $this->form()->openTag($this->formAvanceHistoria);
 <?= $this->form()->closeTag(); ?>
 
 <script>
-   
+
     $("input").keydown(function (e) {
         if (e.which === 13) {
             event.preventDefault();

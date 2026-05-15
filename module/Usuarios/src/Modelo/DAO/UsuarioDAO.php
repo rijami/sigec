@@ -316,6 +316,7 @@ class UsuarioDAO extends AbstractTableGateway
                     'fechanacimiento' => new Expression('GETDATE()'),
                     'idProceso' => $infoEmpleado['idProceso'],
                     'idCoordinacion' => $infoEmpleado['idCoordinacion'],
+                    'idDireccion' => $infoEmpleado['idDireccion']
                 ]
             );
             $this->insertWith($insert);
@@ -419,7 +420,22 @@ class UsuarioDAO extends AbstractTableGateway
         return $this->selectWith($select)->toArray();
     }
     //------------------------------------------------------------------------------
-    public function getCoordinacionesByProceso($idProceso)
+    public function getDireccionesByProceso($idProceso)
+    {
+        $this->table = 'Direccion';
+        $select = new Select($this->table);
+
+        $select->columns([
+            'idDireccion',
+            'nombre'
+        ]);
+        $select->where(['idProceso' => $idProceso]);
+
+        //echo $select->getSqlString();
+        return $this->selectWith($select)->toArray();
+    }
+    //------------------------------------------------------------------------------
+    public function getCoordinacionesByDireccion($idDireccion)
     {
         $this->table = 'Coordinacion';
         $select = new Select($this->table);
@@ -428,7 +444,7 @@ class UsuarioDAO extends AbstractTableGateway
             'idCoordinacion',
             'Coordinacion'
         ]);
-        $select->where(['idProceso' => $idProceso]);
+        $select->where(['idDireccion' => $idDireccion]);
 
         //echo $select->getSqlString();
         return $this->selectWith($select)->toArray();

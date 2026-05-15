@@ -498,9 +498,19 @@ class AdministracionController extends AbstractActionController
     //------------------------------------------------------------------------------
     public function getCoordinacionesAction()
     {
+        $idDireccion = (int) trim($this->params()->fromQuery('idDireccion', 0));
+        $view = new ViewModel([
+            'coordinaciones' => $this->DAO->getCoordinacionesByDireccion($idDireccion),
+        ]);
+        $view->setTerminal(true);
+        return $view;
+    }
+    //------------------------------------------------------------------------------
+    public function getDireccionesAction()
+    {
         $idProceso = (int) trim($this->params()->fromQuery('idProceso', 0));
         $view = new ViewModel([
-            'coordinaciones' => $this->DAO->getCoordinacionesByProceso($idProceso),
+            'direcciones' => $this->DAO->getDireccionesByProceso($idProceso),
         ]);
         $view->setTerminal(true);
         return $view;

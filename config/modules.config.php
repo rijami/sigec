@@ -34,5 +34,6 @@ return [
     // Aqui deben ir los modulos implementados
     'Dashboard',
     'Indicadores',
+    'Reportes',
     //------------------------------------------------------------------------------
 ];

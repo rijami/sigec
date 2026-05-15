@@ -16,7 +16,7 @@ use Usuarios\Modelo\Entidades\Recursorbacrol;
 class PermisosController extends AbstractActionController {
 
     private $DAO;
-    private $rutaLog = 'C:/ARCHIVOS_MASCLICK/';
+    private $rutaLog = '/var/log/sigec/';
 
 //------------------------------------------------------------------------------
 

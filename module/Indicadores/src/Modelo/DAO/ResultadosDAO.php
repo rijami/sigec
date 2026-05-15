@@ -162,67 +162,51 @@ class ResultadosDAO extends AbstractTableGateway
         }
     }
 
-    public function editar(Indicador $resultadoOBJ)
+    public function editar(Resultados $resultadoOBJ)
     {
         $connection = $this->getAdapter()->getDriver()->getConnection();
         $connection->beginTransaction();
         try {
-            $this->table = 'indicadores';
+            $this->table = 'indicadores_resultado';
             $update = new Update($this->table);
             //$datos = $resultadoOBJ->getArrayCopy();
             $datos = [
-                'id_indicador' => $resultadoOBJ->getIdIndicador(),
-                'codigo' => $resultadoOBJ->getCodigo(),
-                'nombre_indicador' => $resultadoOBJ->getNombreIndicador(),
-                'objetivo' => $resultadoOBJ->getObjetivo(),
-                'periodicidad' => $resultadoOBJ->getPeriodicidad(),
-                'fuente_informacion' => $resultadoOBJ->getFuenteInformacion(),
-                'meta' => $resultadoOBJ->getMeta(),
-                'idProceso' => $resultadoOBJ->getIdProceso(),
-                'idCoordinacion' => $resultadoOBJ->getIdCoordinacion(),
-                'TIPO_INDICADOR' => $resultadoOBJ->getTipoIndicador(),
-                'SENTIDO' => $resultadoOBJ->getSentido(),
-                'registradopor' => $resultadoOBJ->getRegistradoPor(),
-                'estado' => $resultadoOBJ->getEstado(),
-                'FechaRegistro' => new Expression('GETDATE()'),
+                'mes' => $resultadoOBJ->getMes(),
+                'num' => $resultadoOBJ->getNum(),
+                'dem' => $resultadoOBJ->getDem(),
+                'resultado' => $resultadoOBJ->getResultado(),
+                'analisis' => $resultadoOBJ->getAnalisis(),
+                /*   'registradopor' => $resultadoOBJ->getRegistradoPor(),
+                  'FechaRegistro' => new Expression('GETDATE()'), */
                 'fechahoramod' => new Expression('GETDATE()'),
                 'modificadopor' => $resultadoOBJ->getModificadoPor()
             ];
-            unset($datos['id_indicador']);
-            unset($datos['idProceso']);
-            unset($datos['idCoordinacion']);
-            unset($datos['codigo']);
-            unset($datos['FechaRegistro']);
-            unset($datos['registradopor']);
+            unset($datos['id_result']);
 
             $datos['fechahoramod'] = new Expression('GETDATE()');
             if (empty($datos['modificadopor'])) {
                 $datos['modificadopor'] = null;
             }
 
-            $update->set($datos)->where(['id_indicador' => (int) $resultadoOBJ->getIdIndicador()]);
+            $update->set($datos)->where(['id_result' => (int) $resultadoOBJ->getId_result()]);
             /* echo $update->getSqlString(); */
             $this->updateWith($update);
             $connection->commit();
         } catch (\Exception $e) {
             $connection->rollback();
-            throw new \Exception("Error al editar el indicador: " . $e->getMessage(), $e->getCode(), $e);
+            throw new \Exception("Error al editar el resultado: " . $e->getMessage(), $e->getCode(), $e);
         }
     }
 
-    public function eliminarLogico(Indicador $resultadoOBJ)
+    public function eliminar(Resultados $resultadoOBJ)
     {
         $connection = $this->adapter->getDriver()->getConnection();
         $connection->beginTransaction();
         try {
-            $this->table = 'indicadores';
-            $update = new Update($this->table);
-            $update->set([
-                'estado' => 'Eliminado',
-                'modificadopor' => $resultadoOBJ->getModificadoPor(),
-                'fechahoramod' => new Expression('GETDATE()'),
-            ])->where(['id_indicador' => (int) $resultadoOBJ->getIdIndicador()]);
-            $this->updateWith($update);
+            $this->table = 'indicadores_resultado';
+            $delete = new Delete($this->table);
+            $delete->where(['id_result' => (int) $resultadoOBJ->getId_result()]);
+            $this->deleteWith($delete);
 
             $connection->commit();
         } catch (Exception $e) {
@@ -336,14 +320,15 @@ class ResultadosDAO extends AbstractTableGateway
         return $this->selectWith($select)->toArray();
     }
 
-    public function getProyectobyId($idProyecto = 0)
+    public function getResultadoById($idResultado = 0)
     {
-        if ($idProyecto === 0) {
+        if ($idResultado === 0) {
             return null;
         }
-        $select = new Select('proyecto');
-        $select->columns(['idProyecto', 'codigo', 'nombre', 'descripcion'])
-            ->where(['idProyecto' => (int) $idProyecto])->limit(1);
+        $select = new Select('indicadores_resultado');
+        $select->quantifier('TOP 1');
+        $select->columns(['id_result', 'mes', 'num', 'dem', 'resultado', 'analisis', 'FechaRegistro', 'registradopor', 'fechahoramod', 'modificadopor'])
+            ->where(['id_result' => (int) $idResultado]);
 
         $datos = $this->selectWith($select)->toArray();
         return count($datos) > 0 ? $datos[0] : null;

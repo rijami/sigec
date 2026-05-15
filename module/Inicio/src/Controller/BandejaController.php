@@ -5,15 +5,20 @@ declare(strict_types=1);
 namespace Inicio\Controller;
 
 use Inicio\Modelo\DAO\InicioDAO;
+use Inicio\Service\OutlookMailService;
 use Laminas\Authentication\AuthenticationService;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\Session\Container;
+use Laminas\View\Model\JsonModel;
 use Laminas\View\Model\ViewModel;
+use Laminas\Mvc\Application;
+use Laminas\Stdlib\ArrayUtils;
 
 class BandejaController extends AbstractActionController
 {
 
     private $DAO;
+    private OutlookMailService $mailService;
     private $SESSION = null;
     private $RBAC = null;
     private $rutaLog = '/var/log/sigec/';
@@ -23,9 +28,10 @@ class BandejaController extends AbstractActionController
     /**
      * Inicializa el DAO
      */
-    public function __construct(InicioDAO $dao)
+    public function __construct(InicioDAO $dao, OutlookMailService $mailService)
     {
         $this->DAO = $dao;
+        $this->mailService = $mailService;
     }
 
     //------------------------------------------------------------------------------
@@ -52,7 +58,119 @@ class BandejaController extends AbstractActionController
      */
     public function indexAction()
     {
+        $reportes = $this->DAO->getReporte();
+        $mailService = $this->getEvent()
+            ->getApplication()
+            ->getServiceManager()
+            ->get(OutlookMailService::class);
+        $mesactual = (int) date('n');
+        //---
+        foreach ($reportes as $reporte) {
+            switch ($reporte['mes']):
+                case 1:
+                    $mes = "ENERO";
+                    break;
+                case 2:
+                    $mes = "FEBRERO";
+                    break;
+                case 3:
+                    $mes = "MARZO";
+                    break;
+                case 4:
+                    $mes = "ABRIL";
+                    break;
+                case 5:
+                    $mes = "MAYO";
+                    break;
+                case 6:
+                    $mes = "JUNIO";
+                    break;
+                case 7:
+                    $mes = "JULIO";
+                    break;
+                case 8:
+                    $mes = "AGOSTO";
+                    break;
+                case 9:
+                    $mes = "SEPTIEMBRE";
+                    break;
+                case 10:
+                    $mes = "OCTUBRE";
+                    break;
+                case 11:
+                    $mes = "NOVIEMBRE";
+                    break;
+                case 12:
+                    $mes = "DICIEMBRE";
+                    break;
+                default:
+                    $mes = "N/A";
+            endswitch;
+            //---
+            if ($reporte['estado'] === 'Sin Informacion') {
+                if (intval($reporte['recordatorio']) !== 1) {
+                    if ($mesactual === (int) $reporte['mes']) {
+                        $fechareordatorio = date('Y-m-d', strtotime($reporte['fecha_limite'] . ' -3 day'));
+                        if (date('Y-m-d') == $fechareordatorio) {
+                            $destinatario = $reporte['correo'];
 
+                            $asunto = 'Recordatorio Reporte '
+                                . $reporte['periodicidad'] . ' '
+                                . $reporte['nombre_reporte']
+                                . ' Mes - ' . $mes;
+
+                            $mensaje = 'Cordial saludo,<br><br>
+            mediante la presente y con el respeto acostumbrado remito recordatorio del reporte <b>'
+                                . $reporte['nombre_reporte'] . '</b> correspondiente al mes de <b>'
+                                . $mes . '</b> ya que se encuentra proximo a vencer.'
+                                . '<br><br><table class="table table-striped table-bordered table-hover table-sm" width="100%">
+                                <tr>
+                                    <th class="text-center align-middle" style="border: 1px solid #000;">Reporte</th>
+                                    <th class="text-center align-middle" style="border: 1px solid #000;">Archivo</th>
+                                    <th class="text-center align-middle" style="border: 1px solid #000;">Plataforma</th>
+                                    <th class="text-center align-middle" style="border: 1px solid #000;">Periodicidad</th>
+                                    <th class="text-center align-middle" style="border: 1px solid #000;">Mes</th>
+                                    <th class="text-center align-middle" style="border: 1px solid #000;">Fecha Límite</th>
+                                </tr>
+                                <tr>
+                                    <td class="text-center align-middle" style="border: 1px solid #000;">' . $reporte['nombre_reporte'] . '</td>
+                                    <td class="text-center align-middle" style="border: 1px solid #000;">' . $reporte['nombre_archivo'] . '</td>
+                                    <td class="text-center align-middle" style="border: 1px solid #000;">' . $reporte['plataforma'] . '</td>
+                                    <td class="text-center align-middle" style="border: 1px solid #000;">' . $reporte['periodicidad'] . '</td>
+                                    <td class="text-center align-middle" style="border: 1px solid #000;">' . $mes . '</td>
+                                    <td class="text-center align-middle" style="border: 1px solid #000;">' . date('Y-m-d', strtotime($reporte['fecha_limite'])) . '</td>
+                                </tr>
+                                                              </table>
+                            
+                    <br><br>Atentamente,<br><br>Elaboró:
+<br>' . $reporte['respon_reporta'] . '
+<br>Profesional Universitario
+
+<br><br>DARIO FERNANDO VELEZ
+<br>Coordinador de Estadística
+
+<br>Teléfono: 7738725 ext (248)
+<br>Celular: 3186627406
+<br>Línea Gratuita Nacional: 018000913701(Atención 24 Horas)
+<br>Cra 1 Norte No. 4-56 Avenida Panamericana
+<br>Ipiales - Nariño
+<br>Pagina Web: www.mallamaseps.com
+
+<b><br><br>Mallamas EPS Indígena
+<br>¡El Autocuidado en Salud para un Buen Vivir!</b>';
+                            //----
+                            try {
+                                $mailService->sendNotification($destinatario, $asunto, $mensaje, true);
+                                $this->DAO->recordatorioEnviado($reporte['idProgramacion']);
+                            } catch (\Throwable $e) {
+                                error_log($e->getMessage());
+                            }
+                        }
+
+                    }
+                }
+            }
+        }
         $dias = ['Domingo', 'Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado'];
         $meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
         $datos = [
@@ -235,6 +353,61 @@ class BandejaController extends AbstractActionController
                 'rolesUsuario' => $rolesUsuario[0]
             ]
         );
+    }
+
+    //------------------------------------------------------------------------------
+
+    /**
+     * Envía un correo de prueba o notificación por Outlook SMTP.
+     */
+    public function enviarNotificacionAction()
+    {
+        $request = $this->getRequest();
+
+        if (!$request->isPost()) {
+            return new JsonModel([
+                'success' => false,
+                'message' => 'Método no permitido'
+            ]);
+        }
+
+        try {
+            $destinatario = trim($request->getPost('destinatario', ''));
+            $asunto = trim($request->getPost('asunto', 'Prueba SIGEC'));
+            $mensaje = $request->getPost('mensaje', 'Correo de prueba desde PHP');
+            $html = $request->getPost('html', '0') === '1';
+
+            if (empty($destinatario)) {
+                throw new \Exception('El destinatario es obligatorio');
+            }
+
+            // 🔥 Obtener servicio correctamente
+            $mailService = $this->getEvent()
+                ->getApplication()
+                ->getServiceManager()
+                ->get(OutlookMailService::class);
+
+            $mailService->sendNotification(
+                $destinatario,
+                $asunto,
+                $mensaje,
+                $html
+            );
+
+            return new JsonModel([
+                'success' => true,
+                'message' => 'Correo enviado correctamente'
+            ]);
+
+        } catch (\Throwable $ex) {
+
+            error_log("Error correo: " . $ex->getMessage());
+
+            return new JsonModel([
+                'success' => false,
+                'message' => 'Error al enviar correo'
+            ]);
+        }
     }
     //------------------------------------------------------------------------------
 

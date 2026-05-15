@@ -23,3 +23,6 @@ temp/
 phpunit.xml
 .phpunit.result.cache
 nbproject/
+module_old/
+public_old/
+modificados/

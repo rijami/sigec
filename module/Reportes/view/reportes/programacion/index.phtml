@@ -1,0 +1,579 @@
+<?php
+$flash = $this->flashMessenger();
+$notificaciones = [
+    'success' => array_merge($flash->getSuccessMessages(), $flash->getCurrentSuccessMessages()),
+    'error' => array_merge($flash->getErrorMessages(), $flash->getCurrentErrorMessages()),
+    'alert' => array_merge($flash->getMessages(), $flash->getCurrentMessages()),
+    'information' => array_merge($flash->getInfoMessages(), $flash->getCurrentInfoMessages()),
+    'warning' => array_merge($flash->getWarningMessages(), $flash->getCurrentWarningMessages()),
+];
+$flash->clearCurrentMessages('default');
+$flash->clearCurrentMessages('info');
+$flash->clearCurrentMessages('success');
+$flash->clearCurrentMessages('warning');
+$flash->clearCurrentMessages('error');
+
+$mostrarMensajes = '';
+foreach (array_filter($notificaciones) as $tipo => $mensajes) {
+    $tipoToastr = 'info';
+    $titulo = 'SwApp';
+    switch ($tipo) {
+        case 'success':
+            $titulo = ' OK ';
+            $tipoToastr = 'success';
+            break;
+        case 'error':
+            $titulo = ' ERROR ';
+            $tipoToastr = 'error';
+            break;
+        case 'alert':
+            $titulo = ' ALERTA ';
+            $tipoToastr = 'warning';
+            break;
+        case 'information':
+            $titulo = ' INFORMACION ';
+            $tipoToastr = 'info';
+            break;
+        case 'warning':
+            $titulo = ' PRECAUCION ';
+            $tipoToastr = 'warning';
+            break;
+    }
+    foreach ($mensajes as $mensaje) {
+        $mostrarMensajes .= "toastr.$tipoToastr('$mensaje', '$titulo', {
+                closeButton: true,
+                debug: false,
+                newestOnTop: false,
+                progressBar: true,
+                positionClass: 'toast-top-full-width',
+                preventDuplicates: false,
+                onclick: null,
+                showDuration: '300',
+                hideDuration: '1000',
+                timeOut: '8000',
+                extendedTimeOut: '1000',
+                showEasing: 'swing',
+                hideEasing: 'linear',
+                showMethod: 'fadeIn',
+                hideMethod: 'fadeOut'
+            }); ";
+    }
+}
+
+$title = 'Programación del Reporte';
+$this->headTitle($title);
+$this->headLink()->prependStylesheet($this->basePath('/css/select2.min.css'));
+
+$this->headScript()->prependScript('
+            // Variable global para controlar el cierre
+            window.cierreProgramado = false;
+
+            $(document).ajaxStop($.unblockUI);
+            $(document).ready(function() {
+                $("#tabla").DataTable({
+                    responsive: false,
+                    iDisplayLength: 5,
+                    sPaginationType: "full_numbers",
+                    oLanguage: {
+                        sLengthMenu: "Mostrar: _MENU_ registros por pagina",
+                        sZeroRecords: "NO SE HA ENCONTRADO INFORMACION",
+                        sInfo: "Mostrando <b>_START_</b> a <b>_END_</b> registros <br>TOTAL REGISTROS: <b>_TOTAL_</b> Registros</b>",
+                        sInfoEmpty: "Mostrando 0 A 0 registros",
+                        sInfoFiltered: "(Filtrados de un total de <b>_MAX_</b> registros)",
+                        sLoadingRecords: "CARGANDO...",
+                        sProcessing: "EN PROCESO...",
+                        sSearch: "Buscar:",
+                        sEmptyTable: "NO HAY INFORMACION DISPONIBLE PARA LA TABLA",
+                        oPaginate: {
+                            sFirst: "<i class=\'fa fa-fast-backward\' aria-hidden=\'true\' title=\'Inicio\'></i>",
+                            sPrevious: "<i class=\'fa fa-step-backward\' aria-hidden=\'true\' title=\'Anterior\'></i>",
+                            sNext: "<i class=\'fa fa-step-forward\' aria-hidden=\'true\' title=\'Siguiente\'></i>",
+                            sLast: "<i class=\'fa fa-fast-forward\' aria-hidden=\'true\' title=\'Fin\'></i>",
+                        }
+                    },
+                    aaSorting: [[0, "desc"]]
+                });
+
+                // Lógica corregida para el cierre del modal
+                $("#modalFormulario").on("hide.bs.modal", function (e) {
+                    // Si el cierre viene del AJAX (guardado exitoso), dejar pasar
+                    if (window.cierreProgramado === true) {
+                        return true;
+                    }
+
+                    // Si es manual, evitar el cierre y preguntar
+                    e.preventDefault();
+                    
+                    Swal.fire({
+                        title: "&iquest;DESEA CERRAR EL FORMULARIO?",
+                        text: "Se perderán los datos no guardados.",
+                        icon: "question",
+                        showCancelButton: true,
+                        confirmButtonText: "Si, cerrar",
+                        cancelButtonText: "No, continuar",
+                        allowOutsideClick: false
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            // Autorizar cierre y cerrar manualmente
+                            window.cierreProgramado = true;
+                            $("#modalFormulario").modal("hide");
+                        }
+                    });
+                });
+
+                // Resetear la variable cuando el modal esté completamente cerrado
+                $("#modalFormulario").on("hidden.bs.modal", function () {
+                    window.cierreProgramado = false;
+                });
+
+                ' . $mostrarMensajes . '
+            });', 'text/javascript', array('noescape' => true))
+    ->prependFile($this->basePath('/js/sistema/programacion.js'))
+    ->prependFile($this->basePath('/js/select2.min.js'));
+?>
+
+<div class="container bg-white rounded-lg shadow-sm p-4 border">
+    <h3><i class="fas fa-file-signature fa-lg text-primary" style="color: #eede00 !important;"></i> &nbsp; Gestion de
+        Reporte</h3>
+    <hr>
+
+    <div class="row">
+        <div class="col-md-12">
+            <fieldset class="border p-3 rounded">
+                <legend class="w-auto px-2 text-primary" style="font-size: 1.1em;">Información del Reporte</legend>
+                <div class="form-row">
+                    <div class="form-group col-md-2 px-1 mb-1">
+                        <label class="form-control-sm">ID Reporte</label>
+
+                        <input type="text" class="form-control form-control-sm"
+                            value="<?= $this->infoReporte['idReporte'] ?>" readonly>
+                    </div>
+                    <div class="form-group col-md-10 px-1 mb-1">
+                        <label class="form-control-sm">Reporte</label>
+                        <input type="text" class="form-control form-control-sm font-weight-bold"
+                            value="<?= $this->infoReporte['nombre_reporte'] ?>" readonly>
+                    </div>
+                    <div class="form-group col-md-2 px-1 mb-1">
+                        <label class="form-control-sm">Periodicidad</label>
+                        <input type="text" class="form-control form-control-sm"
+                            value="<?= $this->infoReporte['periodicidad'] ?>" readonly>
+                    </div>
+                    <div class="form-group col-md-10 px-1 mb-1">
+                        <label class="form-control-sm">Archivo</label>
+                        <input type="text" class="form-control form-control-sm"
+                            value="<?= $this->infoReporte['nombre_archivo'] ?>" readonly>
+                    </div>
+
+                    <div class="form-group col-md-6 px-1 mb-1">
+                        <label class="form-control-sm">Plataforma</label>
+                        <input type="text" class="form-control form-control-sm"
+                            value="<?= $this->infoReporte['plataforma'] ?>" readonly>
+                    </div>
+
+                    <div class="form-group col-md-6 px-1 mb-1">
+                        <label class="form-control-sm">Normatividad</label>
+                        <input type="text" class="form-control form-control-sm"
+                            value="<?= $this->infoReporte['normatividad'] ?>" readonly>
+                    </div>
+                    <div class="form-group col-md-4 px-1 mb-1">
+                        <label class="form-control-sm">Firma</label>
+                        <input type="text" class="form-control form-control-sm"
+                            value="<?= $this->infoReporte['firmas_requeridas'] ?>" readonly>
+                    </div>
+
+                    <div class="form-group col-md-2 px-1 mb-1">
+                        <label class="form-control-sm">Estado</label>
+                        <input type="text" class="form-control form-control-sm font-weight-bold"
+                            value="<?= $this->infoReporte['estado'] ?>" readonly>
+                    </div>
+                    <div class="form-group col-md-3 px-1 mb-1">
+                        <label class="form-control-sm">Registrado Por</label>
+                        <input type="text" class="form-control form-control-sm"
+                            value="<?= $this->infoReporte['registradopor'] ?>" readonly>
+                    </div>
+                    <div class="form-group col-md-3 px-1 mb-1">
+                        <label class="form-control-sm">Fecha Registro</label>
+                        <input type="text" class="form-control form-control-sm"
+                            value="<?= $this->infoReporte['fechahorareg'] ?>" readonly>
+                    </div>
+                </div>
+            </fieldset>
+            <hr>
+            <div class="row">
+
+                <!-- DIRECCIONES -->
+                <div class="col-md-4 mb-3">
+                    <fieldset class="border rounded p-3 h-100">
+
+                        <legend class="w-auto px-2 text-primary small">
+                            Direcciones Responsables
+                        </legend>
+
+                        <?php foreach ($this->direcciones as $direccion): ?>
+
+                            <div class="badge badge-light border p-2 mb-2  text-left">
+                                <?= $direccion['nombre'] ?>
+                            </div>
+
+                        <?php endforeach; ?>
+
+                    </fieldset>
+                </div>
+
+                <!-- COORDINACIONES -->
+                <div class="col-md-4 mb-3">
+                    <fieldset class="border rounded p-3 h-100">
+
+                        <legend class="w-auto px-2 text-primary small">
+                            Coordinaciones Responsables
+                        </legend>
+
+                        <?php foreach ($this->coordinaciones as $coordinacion): ?>
+
+                            <div class="badge badge-light border p-2 mb-2 text-left">
+                                <?= $coordinacion['Coordinacion'] ?>
+                            </div>
+
+                        <?php endforeach; ?>
+
+                    </fieldset>
+                </div>
+
+                <!-- RESPONSABLES -->
+                <div class="col-md-4 mb-3">
+                    <fieldset class="border rounded p-3 h-100">
+
+                        <legend class="w-auto px-2 text-primary small">
+                            Correos Responsables
+                        </legend>
+
+                        <?php foreach ($this->responsables as $responsable): ?>
+
+                            <div class="badge badge-light border p-2 mb-2  text-left">
+                                <?= $responsable['correo'] ?>
+                            </div>
+
+                        <?php endforeach; ?>
+
+                    </fieldset>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+    <hr>
+
+    <!-- BOTONES -->
+    <a href="<?= $this->url('reportes/reportes', ['action' => 'index']) ?>" class="btn btn-warning"
+        title="VOLVER AL LISTADO DE INDICADORES">
+        <i class="fas fa-chevron-left"></i> Regresar
+    </a>
+    <?php if ($empleado['idCoordinacion'] === '23') { ?>
+        <button type="button"
+            onclick="verRegistrarRprogramacion(<?= $this->idReporte ?>,'<?= $this->infoReporte['estado'] ?>')"
+            class="btn btn-success" title="AGREGAR UN NUEVO RESULTADO">
+            <i class="fas fa-plus-circle"></i> Registrar Programación de Reporte
+        </button>
+    <?php } ?>
+</div>
+<br>
+
+<!-- TABLA DE AVANCES -->
+<div class="container bg-white rounded-lg">
+    <div class="row border rounded-lg shadow-sm p-3">
+        <div class="table-responsive" style="font-size: 11px">
+            <h5 class="text-primary">Historial de Programación (Total: <?= count($this->programaciones) ?>)</h5>
+            <hr>
+            <table id="tabla" class="table table-striped table-bordered table-hover table-sm" style="width: 100%">
+                <thead class="thead-dark">
+                    <tr>
+                        <th class="text-center" style="width: 5%">ID</th>
+                        <th class="text-center" style="width: 10%">MES</th>
+                        <th class="text-center" style="width: 10%">FECHA CORTE</th>
+                        <th class="text-center" style="width: 10%">FECHA SOLICITUD</th>
+                        <th class="text-center" style="width: 10%">FECHA LIMITE</th>
+                        <th class="text-center" style="width: 15%">SEMANA</th>
+                        <th class="text-center" style="width: 15%">DIA</th>
+                        <th class="text-center" style="width: 15%">RECORDATORIO</th>
+                        <th class="text-center" style="width: 15%">ESTADO</th>
+                        <?php if ($empleado['idCoordinacion'] === '23') { ?>
+                            <th class="text-center" style="width: 15%">RESPONSABLE SEGUIMIENTO</th>
+                            <th class="text-center" style="width: 10%">ACCIONES</th>
+                        <?php } ?>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($this->programaciones as $programacion): ?>
+                        <?php
+                        $fechaActual = date('Y-m-d');
+
+                        $fechaLimite = date(
+                            'Y-m-d',
+                            strtotime($programacion['fecha_limite'] . ' -1 day')
+                        );
+                        //echo "<pre>";
+                        // print_r("id: " . $programacion['idProgramacion'] . ", Fecha Actual: $fechaActual, Fecha Limite-1: $fechaLimite, Fecha Limite: ".$programacion['fecha_limite']);
+                        if ($programacion['estado'] !== 'Reportado') {
+                            if ($fechaActual === $fechaLimite) {
+
+                                $alerta = 'badge badge-danger';
+
+                            } else {
+
+                                $alerta = 'badge badge-success';
+
+                            }
+                        }else{
+                            $alerta = 'badge badge-secondary';
+                        }
+                        ?>
+
+                        <?php switch ($programacion['mes']):
+                            case 1:
+                                $mes = "ENERO";
+                                break;
+                            case 2:
+                                $mes = "FEBRERO";
+                                break;
+                            case 3:
+                                $mes = "MARZO";
+                                break;
+                            case 4:
+                                $mes = "ABRIL";
+                                break;
+                            case 5:
+                                $mes = "MAYO";
+                                break;
+                            case 6:
+                                $mes = "JUNIO";
+                                break;
+                            case 7:
+                                $mes = "JULIO";
+                                break;
+                            case 8:
+                                $mes = "AGOSTO";
+                                break;
+                            case 9:
+                                $mes = "SEPTIEMBRE";
+                                break;
+                            case 10:
+                                $mes = "OCTUBRE";
+                                break;
+                            case 11:
+                                $mes = "NOVIEMBRE";
+                                break;
+                            case 12:
+                                $mes = "DICIEMBRE";
+                                break;
+                            default:
+                                $mes = "N/A";
+                        endswitch;
+                        switch ($programacion['semana_mes']):
+                            case 1:
+                                $programacion['semana_mes'] = "PRIMERA SEMANA";
+                                break;
+                            case 2:
+                                $programacion['semana_mes'] = "SEGUNDA SEMANA";
+                                break;
+                            case 3:
+                                $programacion['semana_mes'] = "TERCERA SEMANA";
+                                break;
+                            case 4:
+                                $programacion['semana_mes'] = "CUARTA SEMANA";
+                                break;
+                            case 5:
+                                $programacion['semana_mes'] = "QUINTA SEMANA";
+                                break;
+                            default:
+                                $programacion['semana_mes'] = "N/A";
+                        endswitch;
+                        switch ($programacion['dia_semana']):
+                            case 1:
+                                $programacion['dia_semana'] = "LUNES";
+                                break;
+                            case 2:
+                                $programacion['dia_semana'] = "MARTES";
+                                break;
+                            case 3:
+                                $programacion['dia_semana'] = "MIERCOLES";
+                                break;
+                            case 4:
+                                $programacion['dia_semana'] = "JUEVES";
+                                break;
+                            case 5:
+                                $programacion['dia_semana'] = "VIERNES";
+                                break;
+                            case 6:
+                                $programacion['dia_semana'] = "SABADO";
+                                break;
+                            case 7:
+                                $programacion['dia_semana'] = "DOMINGO";
+                                break;
+                            default:
+                                $programacion['dia_semana'] = "N/A";
+                        endswitch;
+                        ?>
+                        <tr>
+                            <td class="text-center align-middle"><?= $programacion['idProgramacion'] ?></td>
+                            <td class="text-center align-middle"><?= nl2br($mes) ?></td>
+                            <td class="text-center align-middle"><?= nl2br($programacion['fecha_corte']) ?></td>
+                            <td class="text-center align-middle"><?= nl2br($programacion['fecha_solicitud']) ?></td>
+                            <td class="text-center align-middle"><span class="<?= $alerta ?> px-2 py-1"
+                                    style="font-size: 100%; border-radius: 10px;">
+                                    <?= nl2br($programacion['fecha_limite']) ?></span>
+                            </td>
+                            <td class="text-center align-middle"><?= ($programacion['semana_mes'] ?? 'N/A') ?></td>
+                            <td class="text-center align-middle"><?= ($programacion['dia_semana'] ?? 'N/A') ?></td>
+                            <td class="text-center align-middle"><?= ($programacion['recordatorio'] != 0 ? "SI" : "NO") ?>
+                                <?php
+                                $estado = $programacion['estado'] ?? 'N/A';
+
+                                switch ($estado) {
+
+                                    case 'Sin Informacion':
+                                        $clase = 'badge badge-danger';
+                                        break;
+
+                                    case 'Con Informacion':
+                                        $clase = 'badge badge-warning';
+                                        break;
+
+                                    case 'Reportado':
+                                        $clase = 'badge badge-success';
+                                        break;
+
+                                    default:
+                                        $clase = 'badge badge-secondary';
+                                        break;
+                                }
+                                ?>
+                            <td class="text-center align-middle"><span class="<?= $clase ?> px-2 py-1"
+                                    style="font-size: 100%; border-radius: 10px;">
+                                    <?= ($programacion['estado'] ?? 'N/A') ?></span></td>
+                            </td>
+                            <?php if ($empleado['idCoordinacion'] === '23') {
+                                ?>
+                                <td class="text-center align-middle">
+                                    <?= ($programacion['respon_reporta'] ?? 'N/A') ?>
+                                </td>
+                                <td class="text-center align-middle">
+                                    <?php if ($programacion['estado'] === 'Sin Informacion'): ?>
+
+                                        <!-- SOLO RECIBIR INFORMACION -->
+                                        <a href="javascript:verInformacion(<?= $programacion['idProgramacion'] ?>)"
+                                            title="Marcar que recibió información">
+                                            <i class="fas fa-hand-holding"></i>
+                                        </a>
+
+                                    <?php elseif ($programacion['estado'] === 'Con Informacion'): ?>
+
+                                        <!-- YA PUEDE REPORTAR -->
+                                        <a href="javascript:verReportar(<?= $programacion['idProgramacion'] ?>)"
+                                            title="Marcar como reportado">
+                                            <i class="fas fa-check"></i>
+                                        </a>
+
+                                    <?php endif; ?>
+                                </td>
+                                <?php
+                            } ?>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+            <hr>
+            <!-- <div class="card mb-4 shadow-sm">
+                <div class="card-header bg-dark text-white">
+                    <i class="fas fa-chart-line"></i> Resumen de Indicadores
+                </div>
+                <div class="card-body">
+                    <div style="position: relative; height:250px; width:100%">
+                        <canvas id="graficaMismaVista"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-striped">
+                </table>
+            </div>
+
+            <?php
+            // Supongamos que $datos es el array que ya usas para llenar la tabla
+            $labels = [];
+            $valores = [];
+            $datos = $this->resultados;
+            foreach ($datos as $fila) {
+                // Guardamos los meses para el eje X
+                $labels[] = $fila['mes'];
+                // Limpiamos el % para que sea numérico (ej: "83.3%" -> 83.3)
+                $valores[] = floatval(str_replace('%', '', $fila['resultado']));
+            }
+
+            // Invertimos los arrays si quieres que el orden sea cronológico (de más viejo a más nuevo)
+            $labels = array_reverse($labels);
+            $valores = array_reverse($valores);
+            ?>
+
+            <script>
+                $(document).ready(function () {
+                    // Obtenemos el contexto del canvas
+                    const ctx = document.getElementById('graficaMismaVista').getContext('2d');
+
+                    // Si ya existe una instancia (por recargas AJAX), la destruimos
+                    if (window.chartPrincipal) {
+                        window.chartPrincipal.destroy();
+                    }
+
+                    window.chartPrincipal = new Chart(ctx, {
+                        type: 'line', // 'line' queda muy bien para ver la evolución de meses
+                        data: {
+                            labels: <?php echo json_encode($labels); ?>,
+                            datasets: [{
+                                label: 'Porcentaje de Resultado',
+                                data: <?php echo json_encode($valores); ?>,
+                                borderColor: '#84BB4E',
+                                backgroundColor: 'rgba(104, 184, 68, 0.2)',
+                                borderWidth: 3,
+                                tension: 0.3, // Curva un poco la línea para que sea elegante
+                                fill: true,
+                                pointBackgroundColor: '#f1f108',
+                                pointRadius: 5
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            scales: {
+                                y: {
+                                    beginAtZero: true,
+                                    max: 150, // Como son porcentajes, el límite es 100
+                                    ticks: {
+                                        callback: function (value) { return value + "%"; }
+                                    }
+                                }
+                            },
+                            plugins: {
+                                legend: { display: false } // Ocultamos la leyenda para ahorrar espacio
+                            }
+                        }
+                    });
+                });
+            </script> -->
+        </div>
+    </div>
+</div>
+
+<!-- Modal Genérico -->
+<div class="modal fade" id="modalFormulario" data-backdrop="static" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-info text-light">
+                <h5 class="modal-title" id="lbModalFormulario">Formulario</h5>
+                <button type="button" class="close text-light" data-dismiss="modal">&times;</button>
+            </div>
+            <div id="divContenido"></div>
+        </div>
+    </div>
+</div>

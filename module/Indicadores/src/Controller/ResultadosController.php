@@ -91,8 +91,8 @@ class ResultadosController extends AbstractActionController
         $mes = date('m');
 
         $meses = [
-            'enero' => 'enero',
-            'febrero' => 'febrero',
+            'enero' => 'Enero',
+            'febrero' => 'Febrero',
             'marzo' => 'Marzo',
             'abril' => 'Abril',
             'mayo' => 'Mayo',
@@ -104,7 +104,7 @@ class ResultadosController extends AbstractActionController
             'noviembre' => 'Noviembre',
             'diciembre' => 'Diciembre'
         ];
-        $meses = array_slice($meses, $mes - 1, null, true);
+        //$meses = array_slice($meses, $mes - 1, null, true);
 
 
         $idIndicador = (int) $this->params()->fromQuery('id_indicador', $this->params()->fromPost('id_indicador', 0));
@@ -126,9 +126,25 @@ class ResultadosController extends AbstractActionController
 
                 try {
                     $this->DAO->registrar($resultados);
-                    return new JsonModel(['success' => true, 'message' => 'Resultado registrado correctamente.']);
+                    if ($request->isXmlHttpRequest()) {
+                        $this->flashMessenger()->addSuccessMessage('EL RESULTADO FUE REGISTRADO EXITOSAMENTE.');
+                        return new JsonModel([
+                            'success' => true,
+                            'message' => 'REGISTRO EXITOSO'
+                        ]);
+                    }
+                    // return new JsonModel(['success' => true, 'message' => 'Resultado registrado correctamente.']);
                 } catch (\Exception $e) {
-                    return new JsonModel(['success' => false, 'globalMessage' => 'Error: ' . $e->getMessage()]);
+                    $msgLog = "\n" . date('Y-m-d H:i:s') . " ERROR REGISTRAR - " . $ex->getMessage() . "\n";
+                    file_put_contents($this->rutaLog . 'app.log', $msgLog, FILE_APPEND);
+
+                    if ($request->isXmlHttpRequest()) {
+                        return new JsonModel([
+                            'success' => false,
+                            'globalMessage' => 'ERROR EN SERVIDOR: ' . $ex->getMessage()
+                        ]);
+                    }
+                    //return new JsonModel(['success' => false, 'globalMessage' => 'Error: ' . $e->getMessage()]);
                 }
             } else {
                 return new JsonModel(['success' => false, 'messages' => $formResultados->getMessages()]);
@@ -139,6 +155,7 @@ class ResultadosController extends AbstractActionController
         $view->setTerminal(true);
         return $view;
     }
+
     //------------------------------------------------------------------------------
 
     /**
@@ -147,91 +164,104 @@ class ResultadosController extends AbstractActionController
     public function editarAction()
     {
 
-        $idIndicador = (int) $this->params()->fromQuery('id_indicador', $this->params()->fromPost('id_indicador', 0));
-        if ($idIndicador === 0) {
-            $this->flashMessenger()->addErrorMessage('No se proporcionó un ID de indicador válido para edición.');
-            return $this->redirect()->toRoute('indicadores/indicadores', ['action' => 'index']);
+        $idResultado = (int) $this->params()->fromQuery('id_result', $this->params()->fromPost('id_result', 0));
+        if ($idResultado === 0) {
+            $this->flashMessenger()->addErrorMessage('No se proporcionó un ID de resultado válido para edición.');
+            return $this->redirect()->toRoute('resultados/resultados', ['action' => 'index']);
         }
 
-        $infoIndicador = $this->DAO->getIndicadorById($idIndicador);
+        $infoResultado = $this->DAO->getResultadoById($idResultado);
 
-        if (empty($infoIndicador)) {
-            $this->flashMessenger()->addErrorMessage('El indicador a editar no se encuentra registrado.');
-            return $this->redirect()->toRoute('indicadores/indicadores', ['action' => 'index']);
+        if (empty($infoResultado)) {
+            $this->flashMessenger()->addErrorMessage('El resultado a editar no se encuentra registrado.');
+            return $this->redirect()->toRoute('resultados/resultados', ['action' => 'index']);
         }
 
-        $procesosRaw = $this->DAO->getProcesos();
-        $coordinacionesRaw = $this->DAO->getCoordinaciones();
-        $listaProcesos = [];
-        foreach ($procesosRaw as $proceso) {
-            $listaProcesos[$proceso['idProceso']] = $proceso['Proceso'];
-        }
-        $listaCoordinaciones = [];
-        foreach ($coordinacionesRaw as $coordinacion) {
-            $listaCoordinaciones[$coordinacion['idCoordinacion']] = $coordinacion['Coordinacion'];
-        }
-        $formIndicadores = new IndicadoresForm('editar', $listaProcesos, $listaCoordinaciones);
+        $meses = [
+            'enero' => 'Enero',
+            'febrero' => 'Febrero',
+            'marzo' => 'Marzo',
+            'abril' => 'Abril',
+            'mayo' => 'Mayo',
+            'junio' => 'Junio',
+            'julio' => 'Julio',
+            'agosto' => 'Agosto',
+            'septiembre' => 'Septiembre',
+            'octubre' => 'Octubre',
+            'noviembre' => 'Noviembre',
+            'diciembre' => 'Diciembre'
+        ];
+        //$meses = array_slice($meses, $mes - 1, null, true);
+        $formResultados = new ResultadosForm('editar', $meses);
         $request = $this->getRequest();
 
         if (!$request->isPost()) {
-            $formIndicadores->setData($infoIndicador);
+            $formResultados->setData($infoResultado);
             $view = new ViewModel([
-                'formIndicadores' => $formIndicadores,
+                'formResultados' => $formResultados,
             ]);
             $view->setTerminal(true);
             return $view;
         }
 
-        $idIndicadorFromPost = (int) $request->getPost('id_indicador');
-        $idIndicador = ($idIndicadorFromPost !== 0) ? $idIndicadorFromPost : $idIndicador;
+        $idResultadoFromPost = (int) $request->getPost('id_result');
+        $idResultado = ($idResultadoFromPost !== 0) ? $idResultadoFromPost : $idResultado;
 
-        $indicadorOBJ = new Indicador();
-        $formIndicadores->setInputFilter($indicadorOBJ->getInputFilter());
-        $formIndicadores->setData($request->getPost());
+        $resultadoOBJ = new Resultados();
+        $formResultados->setInputFilter($resultadoOBJ->getInputFilter());
+        $formResultados->setData($request->getPost());
 
-        if (!$formIndicadores->isValid()) {
+        if (!$formResultados->isValid()) {
             if ($request->isXmlHttpRequest()) {
                 return new JsonModel([
                     'success' => false,
-                    'messages' => $formIndicadores->getMessages(),
-                    'globalMessage' => 'LA INFORMACION DE EDICION DEL INDICADOR NO ES VALIDA.'
+                    'messages' => $formResultados->getMessages(),
+                    'globalMessage' => 'LA INFORMACION DE EDICION DEL RESULTADO NO ES VALIDA.'
                 ]);
             } else {
-                $this->flashMessenger()->addErrorMessage('LA INFORMACION DE EDICION DEL INDICADOR NO ES VALIDA.');
-                return $this->redirect()->toRoute('indicadores/indicadores', ['action' => 'index']);
+                $this->flashMessenger()->addErrorMessage('LA INFORMACION DE EDICION DEL RESULTADO NO ES VALIDA.');
+                return $this->redirect()->toRoute('resultados/resultados', ['action' => 'index']);
             }
         }
+        $resultadoOBJ->exchangeArray($formResultados->getData());
+        $infoSesion = $this->getInfoSesion();
+        if (strpos($resultadoOBJ->getResultado(), '%') !== false) {
+            // Ya tiene %
+            $resultadoFinal = $resultadoOBJ->getResultado();
+        } else {
+            // No tiene %
+            $resultadoFinal = $resultadoOBJ->getResultado() . '%';
+        }
+        $resultadoOBJ->setResultado(str_replace('.0', '', $resultadoFinal));
+        $resultadoOBJ->setModificadopor($infoSesion['login']);
+        $resultadoOBJ->setFechahoramod(date('Y-m-d H:i:s'));
         try {
-            $indicadorOBJ->exchangeArray($formIndicadores->getData());
-            $infoSesion = $this->getInfoSesion();
-            $indicadorOBJ->setIdIndicador($idIndicador);
-            $indicadorOBJ->setModificadopor($infoSesion['login']);
-            $indicadorOBJ->setFechahoramod(date('Y-m-d H:i:s'));
-            $this->DAO->editar($indicadorOBJ);
+
+            $this->DAO->editar($resultadoOBJ);
 
             if ($request->isXmlHttpRequest()) {
-                $this->flashMessenger()->addSuccessMessage('EL INDICADOR FUE ACTUALIZADO EXITOSAMENTE.');
+                $this->flashMessenger()->addSuccessMessage('EL RESULTADO FUE ACTUALIZADO EXITOSAMENTE.');
                 return new JsonModel([
                     'success' => true,
-                    'message' => 'EL INDICADOR FUE ACTUALIZADO EXITOSAMENTE.'
+                    'message' => 'EL RESULTADO FUE ACTUALIZADO EXITOSAMENTE.'
                 ]);
             }
-            $this->flashMessenger()->addSuccessMessage('EL INDICADOR FUE ACTUALIZADO EXITOSAMENTE.');
-            return $this->redirect()->toRoute('indicadores/indicadores', ['action' => 'index']);
+            $this->flashMessenger()->addSuccessMessage('EL RESULTADO FUE ACTUALIZADO EXITOSAMENTE.');
+            return $this->redirect()->toRoute('resultados/resultados', ['action' => 'index']);
         } catch (Exception $ex) {
-            $msgLog = "\n" . date('Y-m-d H:i:s') . " EDITAR HISTORIA USUARIO - HistoriasController->editar \n"
+            $msgLog = "\n" . date('Y-m-d H:i:s') . " EDITAR RESULTADO - ResultadosController->editar \n"
                 . $ex->getMessage()
                 . "\n----------------------------------------------------------------------- \n";
             file_put_contents($this->rutaLog . 'app.log', $msgLog, FILE_APPEND);
             if ($request->isXmlHttpRequest()) {
-                $errorMessage = 'SE HA PRESENTADO UN INCONVENIENTE! <br>EL INDICADOR NO FUE ACTUALIZADO.';
+                $errorMessage = 'SE HA PRESENTADO UN INCONVENIENTE! <br>EL RESULTADO NO FUE ACTUALIZADO.';
                 return new JsonModel([
                     'success' => false,
                     'globalMessage' => 'ERROR EN SERVIDOR: ' . $ex->getMessage()
                 ]);
             }
-            $this->flashMessenger()->addErrorMessage('SE HA PRESENTADO UN INCONVENIENTE! <br>EL INDICADOR NO FUE ACTUALIZADO.');
-            return $this->redirect()->toRoute('indicadores/indicadores', ['action' => 'index']);
+            $this->flashMessenger()->addErrorMessage('SE HA PRESENTADO UN INCONVENIENTE! <br>EL RESULTADO NO FUE ACTUALIZADO.');
+            return $this->redirect()->toRoute('resultados/resultados', ['action' => 'index']);
         }
     }
 
@@ -243,41 +273,43 @@ class ResultadosController extends AbstractActionController
      */
     public function detalleAction()
     {
-        $idIndicador = (int) $this->params()->fromQuery('idIndicador', 0);
-        if ($idIndicador === 0) {
-            $this->flashMessenger()->addErrorMessage('No se proporcionó un ID de indicadores válido.');
-            return $this->redirect()->toRoute('indicadores/indicadores');
+        $idResultado = (int) $this->params()->fromQuery('id_result', 0);
+        if ($idResultado === 0) {
+            $this->flashMessenger()->addErrorMessage('No se proporcionó un ID de resultados válido.');
+            return $this->redirect()->toRoute('resultados/resultados', ['action' => 'index']);
         }
-        $infoIndicador = $this->DAO->getIndicadorById($idIndicador);
+        $infoResultado = $this->DAO->getResultadoById($idResultado);
 
-        if (empty($infoIndicador)) {
-            $this->flashMessenger()->addErrorMessage('El indicador solicitado no se encuentra registrado.');
-            return $this->redirect()->toRoute('indicadores/indicadores');
-        }
-        $resultadosIndcador = $this->DAO->getResultadosByIndicador($idIndicador);
-
-        $procesosRaw = $this->DAO->getProcesos();
-        $coordinacionesRaw = $this->DAO->getCoordinaciones();
-        $listaProcesos = [];
-        foreach ($procesosRaw as $proceso) {
-            $listaProcesos[$proceso['idProceso']] = $proceso['Proceso'];
+        if (empty($infoResultado)) {
+            $this->flashMessenger()->addErrorMessage('El resultado solicitado no se encuentra registrado.');
+            return $this->redirect()->toRoute('resultados/resultados', ['action' => 'index']);
         }
 
-        $listaCoordinaciones = [];
-        foreach ($coordinacionesRaw as $coordinacion) {
-            $listaCoordinaciones[$coordinacion['idCoordinacion']] = $coordinacion['Coordinacion'];
-        }
+        $mes = date('m');
 
-        /* $listaPrioridades = ['Critica' => 'Crítica', 'Alta' => 'Alta', 'Media' => 'Media', 'Baja' => 'Baja'];
-         */
+        $meses = [
+            'enero' => 'Enero',
+            'febrero' => 'Febrero',
+            'marzo' => 'Marzo',
+            'abril' => 'Abril',
+            'mayo' => 'Mayo',
+            'junio' => 'Junio',
+            'julio' => 'Julio',
+            'agosto' => 'Agosto',
+            'septiembre' => 'Septiembre',
+            'octubre' => 'Octubre',
+            'noviembre' => 'Noviembre',
+            'diciembre' => 'Diciembre'
+        ];
+        //$meses = array_slice($meses, $mes - 1, null, true);
 
-        $formIndicadores = new IndicadoresForm('detalle', $listaProcesos, $listaCoordinaciones);
 
-        $formIndicadores->setData($infoIndicador);
+        $formResultados = new ResultadosForm('detalle', $meses);
+
+        $formResultados->setData($infoResultado);
 
         $view = new ViewModel([
-            'formIndicadores' => $formIndicadores,
-            'resultadosIndcador' => $resultadosIndcador
+            'formResultados' => $formResultados,
 
         ]);
         $view->setTerminal(true);
@@ -292,77 +324,95 @@ class ResultadosController extends AbstractActionController
     public function eliminarAction()
     {
         $request = $this->getRequest();
-        $idIndicadorFromPost = (int) $this->params()->fromPost('id_indicador', 0);
-        $idIndicadorFromQuery = (int) $this->params()->fromQuery('id_indicador', 0);
+        $idResultFromPost = (int) $this->params()->fromPost('id_result', 0);
+        $idResultFromQuery = (int) $this->params()->fromQuery('id_result', 0);
 
 
-        $idIndicador = $idIndicadorFromPost !== 0 ? $idIndicadorFromPost : $idIndicadorFromQuery;
+        $idResultado = $idResultFromPost !== 0 ? $idResultFromPost : $idResultFromQuery;
 
         if ($request->isPost()) {
-            if ($idIndicador === 0) {
-                $this->flashMessenger()->addErrorMessage('Error: ID de indicador no proporcionado en la confirmación para eliminar (POST).');
-                return $this->redirect()->toRoute('indicadores/indicadores');
+            if ($idResultado === 0) {
+                $this->flashMessenger()->addErrorMessage('Error: ID de resultado no proporcionado en la confirmación para eliminar (POST).');
+                return $this->redirect()->toRoute('resultados/resultados', ['action' => 'index']);
             }
             try {
-                $indicadorOBJ = new Indicador();
-                $indicadorOBJ->setIdIndicador($idIndicador);
-                $indicadorOBJ->setEstado('Eliminado');
+                $resultadoOBJ = new Resultados();
+                $resultadoOBJ->setId_result($idResultado);
+                $this->DAO->eliminar($resultadoOBJ);
 
-                $infoSesion = $this->getInfoSesion();
-                $indicadorOBJ->setModificadopor($infoSesion['login']);
-                $indicadorOBJ->setFechahoramod(date('Y-m-d H:i:s'));
-
-                $this->DAO->eliminarLogico($indicadorOBJ);
-
-                $this->flashMessenger()->addSuccessMessage('EL INDICADOR FUE ELIMINADO EXITOSAMENTE.');
+                if ($request->isXmlHttpRequest()) {
+                    $this->flashMessenger()->addSuccessMessage('EL RESULTADO FUE ELIMINADO EXITOSAMENTE.');
+                    return new JsonModel([
+                        'success' => true,
+                        'message' => 'EL RESULTADO FUE ELIMINADO EXITOSAMENTE.'
+                    ]);
+                }
+                $this->flashMessenger()->addSuccessMessage('EL RESULTADO FUE ELIMINADO EXITOSAMENTE.');
+                return $this->redirect()->toRoute('resultados/resultados', ['action' => 'index']);
             } catch (Exception $ex) {
-                error_log("Error al eliminar indicador (POST): " . $ex->getMessage());
-                $this->flashMessenger()->addErrorMessage('SE HA PRESENTADO UN INCONVENIENTE! <br>EL INDICADOR NO PUDO SER ELIMINADO .');
+                $msgLog = "\n" . date('Y-m-d H:i:s') . " ELIMINAR RESULTADO - ResultadosController->eliminar \n"
+                    . $ex->getMessage()
+                    . "\n----------------------------------------------------------------------- \n";
+                file_put_contents($this->rutaLog . 'app.log', $msgLog, FILE_APPEND);
+                if ($request->isXmlHttpRequest()) {
+                    $errorMessage = 'SE HA PRESENTADO UN INCONVENIENTE! <br>EL RESULTADO NO FUE ELIMINADO.';
+                    return new JsonModel([
+                        'success' => false,
+                        'globalMessage' => 'ERROR EN SERVIDOR: ' . $ex->getMessage()
+                    ]);
+                }
+                $this->flashMessenger()->addErrorMessage('SE HA PRESENTADO UN INCONVENIENTE! <br>EL RESULTADO NO FUE ELIMINADO.');
+                return $this->redirect()->toRoute('resultados/resultados', ['action' => 'index']);
             }
-            return $this->redirect()->toRoute('indicadores/indicadores');
         }
 
 
-        if ($idIndicador === 0) {
-            $this->flashMessenger()->addErrorMessage('Error: ID de indicador no proporcionado para la eliminación (GET).');
+        if ($idResultado === 0) {
+            $this->flashMessenger()->addErrorMessage('Error: ID de resultado no proporcionado para la eliminación (GET).');
             $view = new ViewModel([
-                'formIndicador' => new IndicadoresForm('eliminar'),
-                'idIndicadorPasado' => 0
+                'formResultados' => new ResultadosForm('eliminar'),
+                'idResultadoPasado' => 0
             ]);
             $view->setTerminal(true);
             return $view;
         }
 
-        $infoIndicador = $this->DAO->getIndicadorById($idIndicador);
+        $infoResultado = $this->DAO->getResultadoById($idResultado);
 
-        if (empty($infoIndicador)) {
-            $this->flashMessenger()->addErrorMessage('Error: El indicador a eliminar no se encuentra registrado (GET).');
+        if (empty($infoResultado)) {
+            $this->flashMessenger()->addErrorMessage('Error: El resultado a eliminar no se encuentra registrado (GET).');
             $view = new ViewModel([
-                'formIndicadores' => new IndicadoresForm('eliminar'),
-                'idIndicadorPasado' => 0
+                'formResultados' => new ResultadosForm('eliminar'),
+                'idResultadoPasado' => 0
             ]);
             $view->setTerminal(true);
             return $view;
         }
+        $mes = date('m');
 
-        $procesosRaw = $this->DAO->getProcesos();
-        $coordinacionesRaw = $this->DAO->getCoordinaciones();
-        $listaProcesos = [];
-        foreach ($procesosRaw as $proceso) {
-            $listaProcesos[$proceso['idProceso']] = $proceso['Proceso'];
-        }
+        $meses = [
+            'enero' => 'Enero',
+            'febrero' => 'Febrero',
+            'marzo' => 'Marzo',
+            'abril' => 'Abril',
+            'mayo' => 'Mayo',
+            'junio' => 'Junio',
+            'julio' => 'Julio',
+            'agosto' => 'Agosto',
+            'septiembre' => 'Septiembre',
+            'octubre' => 'Octubre',
+            'noviembre' => 'Noviembre',
+            'diciembre' => 'Diciembre'
+        ];
+        //$meses = array_slice($meses, $mes - 1, null, true);
 
-        $listaCoordinaciones = [];
-        foreach ($coordinacionesRaw as $coordinacion) {
-            $listaCoordinaciones[$coordinacion['idCoordinacion']] = $coordinacion['Coordinacion'];
-        }
-        $formIndicadores = new IndicadoresForm('eliminar', $listaProcesos, $listaCoordinaciones);
+        $formResultados = new ResultadosForm('eliminar', $meses);
 
-        $formIndicadores->setData($infoIndicador);
+        $formResultados->setData($infoResultado);
 
         $view = new ViewModel([
-            'formIndicadores' => $formIndicadores,
-            'idIndicadorPasado' => $idIndicador
+            'formResultados' => $formResultados,
+            'idResultadoPasado' => $idResultado
         ]);
         $view->setTerminal(true);
         return $view;

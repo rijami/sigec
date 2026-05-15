@@ -1,0 +1,121 @@
+<?php
+// Preparamos el formulario
+$this->formProgramacion->prepare();
+
+// Configuramos la URL de destino (Action: registrar)
+$this->formProgramacion->setAttribute('action', $this->url('reportes/programacion', ['action' => 'registrar']));
+
+// Abrimos la etiqueta del formulario
+echo $this->form()->openTag($this->formProgramacion);
+?>
+
+<div class="modal-body">
+    <div class="container-fluid">
+        <fieldset>
+            <legend><i class="fas fa-edit"></i> Información de la Programación del Reporte</legend>
+            <hr>
+
+            <?= $this->formElement($this->formProgramacion->get('idProgramacion')) ?>
+
+            <?= $this->formElement($this->formProgramacion->get('idReporte')) ?>
+
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                    <?= $this->formLabel($this->formProgramacion->get('mes')) ?>
+                    <div class="input-group">
+                        <?= $this->formElement($this->formProgramacion->get('mes')) ?>
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i class="fas fa-calendar"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group col-md-4">
+                    <?= $this->formLabel($this->formProgramacion->get('fecha_corte')) ?>
+                    <div class="input-group">
+                        <?= $this->formElement($this->formProgramacion->get('fecha_corte')) ?>
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i class="fas fa-calendar-alt"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group col-md-4">
+                    <?= $this->formLabel($this->formProgramacion->get('fecha_solicitud')) ?>
+                    <div class="input-group">
+                        <?= $this->formElement($this->formProgramacion->get('fecha_solicitud')) ?>
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i class="fas fa-calendar-alt"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                    <?= $this->formLabel($this->formProgramacion->get('fecha_limite')) ?>
+                    <div class="input-group">
+                        <?= $this->formElement($this->formProgramacion->get('fecha_limite')) ?>
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i class="fas fa-calendar-alt"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group col-md-4">
+                    <?= $this->formLabel($this->formProgramacion->get('dia_semana')) ?>
+                    <div class="input-group">
+                        <?= $this->formElement($this->formProgramacion->get('dia_semana')) ?>
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i class="fas fa-calendar-day"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group col-md-4">
+                    <?= $this->formLabel($this->formProgramacion->get('semana_mes')) ?>
+                    <div class="input-group">
+                        <?= $this->formElement($this->formProgramacion->get('semana_mes')) ?>
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i class="fas fa-calendar-week"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </fieldset>
+    </div>
+</div>
+
+<div class="modal-footer">
+    <button type="submit" class="btn btn-primary" title="GUARDAR RESULTADO">
+        <i class="fas fa-save"></i> Guardar
+    </button>
+    <button type="button" class="btn btn-danger" data-dismiss="modal" title="CANCELAR">
+        <i class="far fa-times-circle"></i> Cancelar
+    </button>
+</div>
+
+<?= $this->form()->closeTag(); ?>
+
+<script>
+
+    $("input").keydown(function (e) {
+        if (e.which === 13) {
+            event.preventDefault();
+            return false;
+        }
+    });
+
+
+    setTimeout(function () {
+        $('#descripcion').focus();
+    }, 500);
+</script>

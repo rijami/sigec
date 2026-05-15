@@ -1,0 +1,133 @@
+<?php
+$this->formTablero->prepare();
+echo $this->form()->openTag($this->formTablero);
+?>
+<div class="modal-body ui-front" style="max-height: 450px; overflow-y: auto;">
+    <div class="container-fluid">
+        <fieldset>
+            <legend>Información del tablero de control</legend>
+            <hr>
+            <div class="form-row">
+                <div class="form-group col-md-6 col-sm-6">
+                    <?= $this->formLabel($this->formTablero->get('idProceso')) ?>
+                    <div class="input-group">
+                        <?= $this->formElement($this->formTablero->get('idProceso')) ?>
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i class="fas fa-project-diagram"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group col-md-6 col-sm-6">
+                    <?= $this->formLabel($this->formTablero->get('idCoordinacion')) ?>
+                    <div class="input-group">
+                        <?= $this->formElement($this->formTablero->get('idCoordinacion')) ?>
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i class="fas fa-users"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-6 col-sm-6">
+                    <?= $this->formLabel($this->formTablero->get('nombre')) ?>
+                    <div class="input-group">
+                        <?= $this->formElement($this->formTablero->get('nombre')) ?>
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i class="fas fa-heading"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group col-md-6 col-sm-6">
+                    <?= $this->formLabel($this->formTablero->get('fecha_entregada')) ?>
+                    <div class="input-group">
+                        <?= $this->formElement($this->formTablero->get('fecha_entregada')) ?>
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i class="fas fa-calendar-alt"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-3 col-sm-3">
+                    <?= $this->formLabel($this->formTablero->get('manual')) ?>
+                    <div class="input-group">
+                        <?= $this->formElement($this->formTablero->get('manual')) ?>
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i class="fas fa-flag"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group col-md-3 col-sm-3">
+                    <?= $this->formLabel($this->formTablero->get('fuentes_informacion')) ?>
+                    <div class="input-group">
+                        <?= $this->formElement($this->formTablero->get('fuentes_informacion')) ?>
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i class="fas fa-database"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group col-md-3 col-sm-3">
+                    <?= $this->formLabel($this->formTablero->get('necesidad')) ?>
+                    <div class="input-group">
+                        <?= $this->formElement($this->formTablero->get('necesidad')) ?>
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i class="fas fa-database"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group col-md-3 col-sm-3">
+                    <?= $this->formLabel($this->formTablero->get('historia_usuario')) ?>
+                    <div class="input-group">
+                        <?= $this->formElement($this->formTablero->get('historia_usuario')) ?>
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i class="fas fa-database"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-12 col-sm-12">
+                    <?= $this->formLabel($this->formTablero->get('enlace')) ?>
+                    <div class="input-group">
+                        <?= $this->formElement($this->formTablero->get('enlace')) ?>
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i class="fas fa-tasks"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+    </div>
+</div>
+<div class="modal-footer">
+    <button type="submit" class="btn btn-success" title="REGISTRAR TABLERO" id="btnRegistrarIndicador"><i
+            class="far fa-check-circle"></i> Registrar Tablero</button>
+    <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="far fa-times-circle"></i>
+        Cerrar</button>
+</div>
+<?= $this->form()->closeTag(); ?>
+<script>
+    $("input").keydown(function (e) {
+        if (e.which === 13) {
+            event.preventDefault();
+            return false;
+        }
+    });

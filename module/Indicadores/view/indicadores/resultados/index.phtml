@@ -72,7 +72,7 @@ $this->headScript()->prependScript('
             $(document).ready(function() {
                 $("#tabla").DataTable({
                     responsive: false,
-                    iDisplayLength: 5,
+                    iDisplayLength: 12,
                     sPaginationType: "full_numbers",
                     oLanguage: {
                         sLengthMenu: "Mostrar: _MENU_ registros por pagina",
@@ -281,7 +281,7 @@ $this->headScript()->prependScript('
                         <th class="text-center">ANALISIS</th>
                         <th class="text-center" style="width: 15%">REGISTRADO POR</th>
                         <th class="text-center" style="width: 15%">FECHA</th>
-                        <!-- <th class="text-center" style="width: 10%">ACCIONES</th> -->
+                        <th class="text-center" style="width: 10%">ACCIONES</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -296,14 +296,59 @@ $this->headScript()->prependScript('
                                 title="<?= $resultados['analisis'] ?>"><?= $resultados['analisis'] ?></td>
                             <td class="text-center align-middle"><?= $resultados['registradopor'] ?></td>
                             <td class="text-center align-middle"><?= $resultados['FechaRegistro'] ?></td>
-                            <!--  <td class="text-center align-middle">
-                                <a href="javascript:verDetalle(< ?= $resultados['id_result'] ?>)" title="Ver"><i
+                            <td class="text-center align-middle">
+                                <a href="javascript:verDetalle(<?= $resultados['id_result'] ?>)" title="Ver"><i
                                         class="fas fa-eye"></i></a>
-                                <a href="javascript:verEditar(< ?= $resultados['id_result'] ?>)" title="Editar"><i
-                                        class="fas fa-edit"></i></a>
-                                <a href="javascript:verEliminar(< ?= $resultados['id_result'] ?>)" title="Eliminar"><i
-                                        class="fas fa-trash text-danger"></i></a>
-                            </td> -->
+                                <?php if ($fechaLimite !== "Vencido") {
+                                    switch ($resultados['mes']) {
+                                        case 'enero':
+                                            $mesNum = 1;
+                                            break;
+                                        case 'febrero':
+                                            $mesNum = 2;
+                                            break;
+                                        case 'marzo':
+                                            $mesNum = 3;
+                                            break;
+                                        case 'abril':
+                                            $mesNum = 4;
+                                            break;
+                                        case 'mayo':
+                                            $mesNum = 5;
+                                            break;
+                                        case 'junio':
+                                            $mesNum = 6;
+                                            break;
+                                        case 'julio':
+                                            $mesNum = 7;
+                                            break;
+                                        case 'agosto':
+                                            $mesNum = 8;
+                                            break;
+                                        case 'septiembre':
+                                            $mesNum = 9;
+                                            break;
+                                        case 'octubre':
+                                            $mesNum = 10;
+                                            break;
+                                        case 'noviembre':
+                                            $mesNum = 11;
+                                            break;
+                                        case 'diciembre':
+                                            $mesNum = 12;
+                                            break;
+                                        default:
+                                            $mesNum = 0;
+                                            break;
+                                    }
+                                    if ($mesNum === intval(ltrim(date("m"), '0'))) { ?>
+                                        <a href="javascript:verEditar(<?= $resultados['id_result'] ?>)" title="Editar"><i
+                                                class="fas fa-edit"></i></a>
+                                        <a href="javascript:verEliminar(<?= $resultados['id_result'] ?>)" title="Eliminar"><i
+                                                class="fas fa-trash text-danger"></i></a>
+                                    <?php }
+                                } ?>
+                            </td>
                         </tr>
                     <?php endforeach; ?>
                 </tbody>

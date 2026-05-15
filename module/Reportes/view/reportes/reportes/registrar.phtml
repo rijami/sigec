@@ -1,0 +1,112 @@
+<?php
+$this->formReportes->prepare();
+echo $this->form()->openTag($this->formReportes);
+?>
+<div class="modal-body ui-front" style="max-height: 450px; overflow-y: auto;">
+    <div class="container-fluid">
+        <fieldset>
+            <legend>Información del Nuevo reporte</legend>
+            <hr>
+            <div class="form-row">
+                <div class="form-group col-md-6 col-sm-6">
+                    <?= $this->formLabel($this->formReportes->get('nombre_reporte')) ?>
+                    <div class="input-group">
+                        <?= $this->formElement($this->formReportes->get('nombre_reporte')) ?>
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i class="fas fa-book"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group col-md-6 col-sm-6">
+                    <?= $this->formLabel($this->formReportes->get('nombre_archivo')) ?>
+                    <div class="input-group">
+                        <?= $this->formElement($this->formReportes->get('nombre_archivo')) ?>
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i class="fas fa-file-alt"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-6 col-sm-6">
+                    <?= $this->formLabel($this->formReportes->get('plataforma')) ?>
+                    <div class="input-group">
+                        <?= $this->formElement($this->formReportes->get('plataforma')) ?>
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i class="fas fa-globe"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group col-md-6 col-sm-6">
+                    <?= $this->formLabel($this->formReportes->get('firmas_requeridas')) ?>
+                    <div class="input-group">
+                        <?= $this->formElement($this->formReportes->get('firmas_requeridas')) ?>
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i class="fas fa-file-signature"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-6 col-sm-6">
+                    <?= $this->formLabel($this->formReportes->get('periodicidad')) ?>
+                    <div class="input-group">
+                        <?= $this->formElement($this->formReportes->get('periodicidad')) ?>
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i class="fas fa-calendar-alt"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group col-md-6 col-sm-6">
+                    <?= $this->formLabel($this->formReportes->get('normatividad')) ?>
+                    <div class="input-group">
+                        <?= $this->formElement($this->formReportes->get('normatividad')) ?>
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i class="fas fa-gavel"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group col-md-6 col-sm-6">
+                    <?= $this->formLabel($this->formReportes->get('respon_reporta')) ?>
+                    <div class="input-group">
+                        <?= $this->formElement($this->formReportes->get('respon_reporta')) ?>
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i class="fas fa-user"></i>
+                            </span>
+                        </div>
+                    </div>
+                    </span>
+                </div>
+            </div>
+    </div>
+</div>
+</fieldset>
+</div>
+</div>
+<div class="modal-footer">
+    <button type="submit" class="btn btn-success" title="REGISTRAR REPORTE" id="btnRegistrarReporte"><i
+            class="far fa-check-circle"></i> Registrar Reporte</button>
+    <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="far fa-times-circle"></i>
+        Cerrar</button>
+</div>
+<?= $this->form()->closeTag(); ?>
+<script>
+    $("input").keydown(function (e) {
+        if (e.which === 13) {
+            event.preventDefault();
+            return false;
+        }
+    });

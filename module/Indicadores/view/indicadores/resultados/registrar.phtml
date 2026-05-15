@@ -14,13 +14,15 @@ echo $this->form()->openTag($this->formResultados);
         <fieldset>
             <legend><i class="fas fa-edit"></i> Información del Resultado</legend>
             <hr>
+            <div hidden="hidden">
 
-            <?= $this->formElement($this->formResultados->get('id_result')) ?>
+                <?= $this->formElement($this->formResultados->get('id_result')) ?>
 
-            <?= $this->formElement($this->formResultados->get('id_indicador')) ?>
+                <?= $this->formElement($this->formResultados->get('id_indicador')) ?>
 
-            <?= $this->formElement($this->formResultados->get('registradopor')) ?>
-            <?= $this->formElement($this->formResultados->get('FechaRegistro')) ?>
+                <?= $this->formElement($this->formResultados->get('registradopor')) ?>
+                <?= $this->formElement($this->formResultados->get('FechaRegistro')) ?>
+            </div>
 
             <div class="form-row">
                 <div class="form-group col-md-4">

@@ -96,6 +96,7 @@ class InicioDAO extends AbstractTableGateway
             'necesidad',
             'historia_usuario',
             'enlace',
+            'imagen',
             /* 'registradopor',
             'fechahoramod',
             'modificadopor', */
@@ -128,6 +129,7 @@ class InicioDAO extends AbstractTableGateway
             'necesidad',
             'historia_usuario',
             'enlace',
+            'imagen'
             /* 'registradopor',
             'fechahoramod',
             'modificadopor', */
@@ -177,5 +179,64 @@ class InicioDAO extends AbstractTableGateway
     }
 
     //------------------------------------------------------------------------------
+    public function getReporte()
+    {
+        $this->table = 'reportes';
+        $select = new Select($this->table);
+        $select->columns([
+            'idReporte',
+            'nombre_reporte',
+            'nombre_archivo',
+            'plataforma',
+            'firmas_requeridas',
+            'periodicidad',
+            'normatividad',
+            'estadoReporte' => new Expression('reportes.estado'),
+            'fechahorareg',
+            'fechahoramod',
+            'registradopor',
+            'modificadopor',
+            'respon_reporta',
+        ])->join(
+                'reporte_programacion',
+                'reportes.idReporte = reporte_programacion.idReporte',
+                ['idProgramacion', 'mes', 'idReporte', 'fecha_corte', 'fecha_solicitud', 'fecha_limite', 'dia_semana', 'semana_mes', 'estado', 'recordatorio']
+            )->join(
+                'reporte_responsable',
+                'reportes.idReporte = reporte_responsable.idReporte',
+                ['idResponsable']
+            )->join(
+                'responsables',
+                'reporte_responsable.idResponsable = responsables.idResponsable',
+                ['correo']
+            );
+
+        return $this->selectWith($select)->toArray();
+    }
+
+    //------------------------------------------------------------------------------
+    public function getResponsables($idReporte = 0)
+    {
+        $this->table = 'reporte_responsable';
+        $select = new Select($this->table);
+        $select->columns([
+            'idReporte',
+            'idResponsable',
+        ])->join(
+                'responsables',
+                'reporte_responsable.idResponsable = responsables.idResponsable',
+                ['correo']
+            )->where("reporte_responsable.idReporte = $idReporte");
+
+        return $this->selectWith($select)->toArray();
+    }
+    public function recordatorioEnviado($idProgramacion)
+    {
+        $this->table = 'reporte_programacion';
+        $update = new \Laminas\Db\Sql\Update($this->table);
+        $update->set(['recordatorio' => 1])
+            ->where(['idProgramacion' => $idProgramacion]);
+        $this->updateWith($update);
+    }
 
 }

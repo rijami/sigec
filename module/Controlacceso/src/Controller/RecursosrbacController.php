@@ -15,7 +15,7 @@ use Laminas\View\Model\JsonModel;
 class RecursosrbacController extends AbstractActionController {
 
     private $DAO;
-    //private $rutaLog = 'C:/ARCHIVOS_JOSANDRO/';
+    //private $rutaLog = '/var/log/sigec/';
     private $rutaLog = './public/log/';
 
 //------------------------------------------------------------------------------

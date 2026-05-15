@@ -90,14 +90,14 @@ function verRegistrarResultado(id_indicador, estado) {
 /**
  * Muestra modal para editar un avance existente
  */
-function verEditar(idAvance) {
+function verEditar(id_result) {
     $.ajax({
         url: "editar",
         dataType: "html",
-        data: { idAvance: idAvance },
+        data: { id_result: id_result },
         success: function (html) {
             $("#divContenido").html(html);
-            $('#lbModalFormulario').html('<i class="fas fa-edit text-primary"></i> &nbsp; EDITAR AVANCE');
+            $('#lbModalFormulario').html('<i class="fas fa-edit text-primary"></i> &nbsp; EDITAR RESULTADO');
             $('#modalFormulario').modal('show');
         },
         complete: function () { if ($.unblockUI) $.unblockUI(); }
@@ -108,14 +108,14 @@ function verEditar(idAvance) {
 /**
  * Muestra modal para ver detalles de un avance
  */
-function verDetalle(idAvance) {
+function verDetalle(id_result) {
     $.ajax({
         url: "detalle",
         dataType: "html",
-        data: { idAvance: idAvance },
+        data: { id_result: id_result },
         success: function (html) {
             $("#divContenido").html(html);
-            $('#lbModalFormulario').html('<i class="fas fa-eye text-warning"></i> &nbsp; DETALLE AVANCE');
+            $('#lbModalFormulario').html('<i class="fas fa-eye text-warning"></i> &nbsp; DETALLE DEL RESULTADO');
             $('#modalFormulario').modal('show');
         },
         complete: function () { if ($.unblockUI) $.unblockUI(); }
@@ -123,14 +123,14 @@ function verDetalle(idAvance) {
     bloqueoAjax();
 }
 
-function verEliminar(idAvance) {
+function verEliminar(id_result) {
     $.ajax({
         url: "eliminar",
         dataType: "html",
-        data: { idAvance: idAvance },
+        data: { id_result: id_result },
         success: function (html) {
             $("#divContenido").html(html);
-            $('#lbModalFormulario').html('<i class="fas fa-trash-alt text-danger"></i> &nbsp; ELIMINAR AVANCE');
+            $('#lbModalFormulario').html('<i class="fas fa-trash-alt text-danger"></i> &nbsp; ELIMINAR RESULTADO');
             $('#modalFormulario').modal('show');
         },
         complete: function () { if ($.unblockUI) $.unblockUI(); }
@@ -166,7 +166,7 @@ function validarRegistrar(evt, formulario) {
     `;
 
     Swal.fire({
-        title: "&iquest;DESEA REGISTRAR ESTE AVANCE?",
+        title: "&iquest;DESEA REGISTRAR ESTE RESULTADO?",
         html: msgHtml,
         icon: "question",
         showCancelButton: true,
@@ -188,12 +188,20 @@ function validarEditar(evt, formulario) {
         return false;
     }
 
-    let descripcion = $(formulario).find('#descripcion').val();
+    let mes = $(formulario).find('#mes').val();
+    let num = $(formulario).find('#num').val();
+    let dem = $(formulario).find('#dem').val();
+    let resultado = $(formulario).find('#resultado').val();
+    let analisis = $(formulario).find('#analisis').val();
+
 
     let msgHtml = `
         <div class="text-left">
-            <b>Nueva Descripción:</b> <br> <i>${descripcion}</i> <hr>
-            Se actualizará la información con los cambios realizados.
+            <b>Mes:</b> <br> <i>${mes}</i> <hr>
+            <b>Numerador:</b> ${num} <br>
+            <b>Denominador:</b> ${dem} <br>
+            <b>Resultado:</b> ${resultado} <br>
+            <b>Análisis del Resultado:</b> ${analisis} <br>
         </div>
     `;
 
@@ -215,19 +223,25 @@ function validarEditar(evt, formulario) {
 function validarEliminar(evt, formulario) {
     evt.preventDefault();
 
-    let descripcion = $(formulario).find('#descripcion').val() || "Sin descripción";
+    let mes = $(formulario).find('#mes').val();
+    let num = $(formulario).find('#num').val();
+    let dem = $(formulario).find('#dem').val();
+    let resultado = $(formulario).find('#resultado').val();
+    let analisis = $(formulario).find('#analisis').val();
 
-    if (descripcion.length > 100) descripcion = descripcion.substring(0, 100) + '...';
 
     let msgHtml = `
         <div class="text-left">
-            <b>Descripción:</b> <br> <i>${descripcion}</i> <hr>
-            <span class="text-danger font-weight-bold">Esta acción eliminará el avance permanentemente.</span>
+            <b>Mes:</b> <br> <i>${mes}</i> <hr>
+            <b>Numerador:</b> ${num} <br>
+            <b>Denominador:</b> ${dem} <br>
+            <b>Resultado:</b> ${resultado} <br>
+            <b>Análisis del Resultado:</b> ${analisis} <br>
         </div>
     `;
 
     Swal.fire({
-        title: "&iquest;DESEA ELIMINAR ESTE AVANCE?",
+        title: "&iquest;DESEA ELIMINAR ESTE RESULTADO?",
         html: msgHtml,
         icon: "warning",
         showCancelButton: true,

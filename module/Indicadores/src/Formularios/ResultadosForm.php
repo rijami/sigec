@@ -77,10 +77,12 @@ class ResultadosForm extends Form implements InputFilterProviderInterface
         $this->setAttribute('onsubmit', $onsubmit);
 
         $this->add([
-            'type' => Element\Hidden::class,
+            'type' => Element\Number::class,
             'name' => 'id_result',
             'attributes' => [
-                'id' => 'id_result'
+                'class' => 'form-control',
+                'id' => 'id_result',
+                'readonly' => true,
             ]
         ]);
 
@@ -118,6 +120,7 @@ class ResultadosForm extends Form implements InputFilterProviderInterface
                 'required' => $requiredForEditable,
                 'readonly' => $readonlyForInputs,
                 'class' => 'form-control',
+                'onchange' => 'calcularResultado()',
                 'id' => 'num',
             ]
         ]);
@@ -160,13 +163,13 @@ class ResultadosForm extends Form implements InputFilterProviderInterface
             ],
             'attributes' => [
                 'required' => true,
-                'readonly' => $readonlyCodigo,
+                'readonly' => $readonlyForInputs,
                 'class' => 'form-control',
                 'id' => 'analisis',
                 'max' => 1000,
                 'rows' => 2,
                 'style' => 'resize: vertical;',
-                'onchange' => 'validarAnalisis()',
+                //'onchange' => 'validarAnalisis()',
                 'placeholder' => 'Describa el progreso realizado...',
             ]
         ]);

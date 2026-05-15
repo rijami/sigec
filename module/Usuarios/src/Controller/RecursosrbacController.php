@@ -20,7 +20,7 @@ use ReflectionMethod;
 class RecursosrbacController extends AbstractActionController {
 
     private $DAO;
-    private $rutaLog = 'C:/ARCHIVOS_JOSANDRO/';
+    private $rutaLog = '/var/log/sigec/';
 
 //------------------------------------------------------------------------------
 

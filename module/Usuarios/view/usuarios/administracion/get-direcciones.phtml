@@ -1,0 +1,6 @@
+<option value="">Seleccione...</option>
+<?php
+foreach ($this->direcciones as $direccion) {
+    echo '<option value="' . $direccion['idDireccion'] . '">' . $direccion['nombre'] . '</option>';
+}
+?>

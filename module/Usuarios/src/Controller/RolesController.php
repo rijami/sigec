@@ -16,7 +16,7 @@ class RolesController extends AbstractActionController {
 
     private $DAO;
     // private $rutaLog = '//';
-    private $rutaLog = 'C:/ARCHIVOS_JOSANDRO/';
+    private $rutaLog = '/var/log/sigec/';
 
     //private $rutaLog = './public/log/';
 //------------------------------------------------------------------------------

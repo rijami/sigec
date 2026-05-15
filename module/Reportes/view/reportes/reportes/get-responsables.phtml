@@ -1,0 +1,86 @@
+<?php
+$infoResponsable = $this->infoResponsable;
+if (is_array($infoResponsable) && count($infoResponsable) > 0) {
+    ?>
+    <fieldset>
+        <legend>Informacion del Responsable</legend>
+        <hr>
+        <div class="form-row">
+            <div class="form-group col-md-3 col-sm-3">
+                <label for="idResponsable">ID Responsable</label>
+                <div class="input-group">
+                    <input type="text" id="idResponsable" name="idResponsable"
+                        value="<?= $infoResponsable['idResponsable'] ?>" style="font-weight: bold" class="form-control"
+                        required="" readonly="">
+                    <div class="input-group-append">
+                        <span class="input-group-text">
+                            <i class="fas fa-key"></i>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group col-md-9 col-sm-9">
+                <label for="correo" class="font-weight-bold">Correo</label>
+                <div class="input-group">
+                    <input type="text" id="correo" name="correo" value="<?= $infoResponsable['correo'] ?>"
+                        style="color: dodgerblue;" class="form-control font-weight-bold" readonly>
+                    <div class="input-group-append">
+                        <span class="input-group-text">
+                            <i class="fas fa-at"></i>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </fieldset>
+    <hr>
+<?php } else { ?>
+    <script>
+        setTimeout(function () {
+            //            document.getElementById("existecliente").classList.add("hidden");
+            document.getElementById("existeCorreo").style.display = "none";
+        }, 3000);
+    </script>
+    <style>
+        .fade-out {
+            transition: opacity 1s ease-in-out;
+            /* Transición suave */
+            opacity: 1;
+            /* Inicialmente visible */
+        }
+
+        .fade-out.hidden {
+            opacity: 0;
+            /* Invisible */
+        }
+    </style>
+    <div id="existeCorreo" class="fade-out alert alert-danger" role="alert">
+        EL CORREO NO FUE ENCONTRADO EN EL SISTEMA REGISTRELO
+    </div>
+    <fieldset>
+        <legend>Registrar Correo</legend>
+        <hr>
+
+        <div class="form-row">
+            <div class="form-group col-md-6 col-sm-6">
+                <label for="correo">Correo</label>
+                <div class="input-group">
+                    <input type="email" id="correo" name="correo" class="form-control" required=""
+                        placeholder="Ingrese el correo del responsable">
+                    <div class="input-group-append">
+                        <span class="input-group-text">
+                            <i class="fas fa-id-card"></i>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </fieldset>
+    <hr>
+<?php } ?>
+<script>
+    $("[data-toggle=\'tooltip\']").tooltip({
+        boundary: 'window',
+        delay: 2
+    });
+</script>

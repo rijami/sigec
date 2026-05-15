@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Layout;
 
 use Laminas\Router\Http\Literal;
-use Laminas\Router\Http\Segment;
 use Usuarios\Controller\LoginController;
 
 return [
@@ -48,7 +47,7 @@ return [
         'template_path_stack' => [
             __DIR__ . '/../view',
         ],
-        'base_path' => '/',
-        'base_url' => '/'
+        'base_path' => '/sigec/public/',
+        'base_url' => '/sigec/'
     ],
 ];

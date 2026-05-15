@@ -4,6 +4,7 @@ namespace Inicio;
 
 use Laminas\Db\Adapter\AdapterInterface;
 use Laminas\ModuleManager\Feature\ConfigProviderInterface;
+use Inicio\Service\OutlookMailService;
 
 class Module implements ConfigProviderInterface {
 
@@ -18,6 +19,11 @@ class Module implements ConfigProviderInterface {
                     $dbAdapter = $container->get(AdapterInterface::class);
                     return new Modelo\DAO\InicioDAO($dbAdapter);
                 },
+                OutlookMailService::class => function ($container) {
+                    $config = $container->get('config');
+                    $mailConfig = $config['mail']['outlook'] ?? [];
+                    return new OutlookMailService($mailConfig);
+                },
             ],
         ];
     }
@@ -26,7 +32,10 @@ class Module implements ConfigProviderInterface {
         return [
             'factories' => [
                 Controller\BandejaController::class => function ($container) {
-                    return new Controller\BandejaController($container->get(Modelo\DAO\InicioDAO::class));
+                    return new Controller\BandejaController(
+                        $container->get(Modelo\DAO\InicioDAO::class),
+                        $container->get(OutlookMailService::class)
+                    );
                 },
             ],
         ];

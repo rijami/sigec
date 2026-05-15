@@ -285,6 +285,21 @@ $this->headScript()->prependScript('
                 </a>
             </div>
         </div>
+         <div class="col-md-4 mb-4">
+            <div class="card shadow-sm border-0 h-100" onmouseover="$(this).addClass('shadow')"
+                onmouseout="$(this).removeClass('shadow')">
+                <a href="<?= $this->url('reportes/reportes', ['action' => 'index']) ?>"
+                    class="text-decoration-none">
+                    <div class="card-body">
+                        <img src="<?= $this->basePath('img/report.png'); ?>" class="rounded img-fluid" alt="Imagen"
+                            style="width: 50%; height: auto">
+                        <h5 class="text-dark">
+                            Matriz de Reportes
+                        </h5>
+                    </div>
+                </a>
+            </div>
+        </div>
     </div>
 
 </div>

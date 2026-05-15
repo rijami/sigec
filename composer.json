@@ -39,7 +39,8 @@
             "Usuarios\\": "module/Usuarios/src/",
             "Controlacceso\\": "module/Controlacceso/src/",
             "Dashboard\\": "module/Dashboard/src/",
-            "Indicadores\\": "module/Indicadores/src/"
+            "Indicadores\\": "module/Indicadores/src/",
+            "Reportes\\": "module/Reportes/src/"
         }
     },
     "autoload-dev": {

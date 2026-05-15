@@ -16,8 +16,8 @@ class UsuariorolController extends AbstractActionController {
 
     private $DAO;
     // private $rutaLog = '//';
-    private $rutaLog = 'C:/ARCHIVOS_JOSANDRO/';
-    private $rutaArchivos = 'C:/ARCHIVOS_JOSANDRO/PAQUETES_TARIFAS/';
+    private $rutaLog = '/var/log/sigec/';
+    private $rutaArchivos = '/var/log/sigec/PAQUETES_TARIFAS/';
 
     //private $rutaLog = './public/log/';
 //------------------------------------------------------------------------------

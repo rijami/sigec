@@ -212,7 +212,30 @@ $this->headScript()->prependScript('
                         echo '<td class="text-center align-middle">' . ($indicador['meta'] ?? 'N/A') . '</td>';
                         echo '<td class="text-center align-middle">' . ($indicador['TIPO_INDICADOR'] ?? 'N/A') . '</td>';
                         echo '<td class="text-center align-middle">' . ($indicador['SENTIDO'] ?? 'N/A') . '</td>';
-                        echo '<td class="text-center align-middle font-weight-bold">' . ($indicador['estado'] ?? 'N/A') . '</td>';
+                         $estado = $indicador['estado'] ?? 'N/A';
+
+                            switch ($estado) {
+
+                                case 'Desactivado':
+                                    $clase = 'badge badge-danger';
+                                    break;
+
+                                case 'Registrado':
+                                    $clase = 'badge badge-warning';
+                                    break;
+
+                                case 'Activado':
+                                    $clase = 'badge badge-success';
+                                    break;
+
+                                default:
+                                    $clase = 'badge badge-secondary';
+                                    break;
+                            }
+
+                            echo '<td class="text-center align-middle"><span class="' . $clase . ' px-2 py-1"
+                                    style="font-size: 100%; border-radius: 10px;">
+                                    ' . ($indicador['estado'] ?? 'N/A') . '</span></td>';
                         echo '<td class="text-center align-middle">' . ($indicador['registradopor'] ?? 'N/A') . '</td>';
                         echo '<td class="text-center align-middle">' . $indicador['fechaRegistro'] . '</td>';
                         echo '</tr>';
