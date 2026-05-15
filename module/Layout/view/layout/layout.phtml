@@ -18,16 +18,16 @@
             'type' => 'image/vnd.microsoft.icon',
             'href' => $this->basePath() . '/img/favicon.ico'
         ])
-            ->prependStylesheet($this->basePath('css/hover-min.css'))
-            ->prependStylesheet($this->basePath('css/app.css'))
-            ->prependStylesheet($this->basePath('css/toastr.min.css'))
-            ->prependStylesheet($this->basePath('css/sweetalert2-bootstrap-4.min.css'))
-            ->prependStylesheet($this->basePath('css/bootstrap.min.css'))
-            ->prependStylesheet($this->basePath('css/datatables.min.css'))
-            ->prependStylesheet($this->basePath('css/all_fontawesome.min.css'))
-            ->prependStylesheet($this->basePath('css/jquery-ui.theme.min.css'))
-            ->prependStylesheet($this->basePath('css/jquery-ui.structure.min.css'))
-            ->prependStylesheet($this->basePath('css/jquery-ui.min.css'));
+            ->appendStylesheet($this->basePath('css/bootstrap.min.css'))
+            ->appendStylesheet($this->basePath('css/jquery-ui.min.css'))
+            ->appendStylesheet($this->basePath('css/jquery-ui.structure.min.css'))
+            ->appendStylesheet($this->basePath('css/jquery-ui.theme.min.css'))
+            ->appendStylesheet($this->basePath('css/all_fontawesome.min.css'))
+            ->appendStylesheet($this->basePath('css/datatables.min.css'))
+            ->appendStylesheet($this->basePath('css/toastr.min.css'))
+            ->appendStylesheet($this->basePath('css/sweetalert2-bootstrap-4.min.css'))
+            ->appendStylesheet($this->basePath('css/hover-min.css'))
+            ->appendStylesheet($this->basePath('css/app.css'));
     ?>
     <!-- Scripts -->
     <?=

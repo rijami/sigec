@@ -76,8 +76,8 @@ RUN composer install --no-dev --optimize-autoloader --no-interaction \
 
 # ─── Directorios requeridos y permisos ───────────────────────────────────────
 RUN mkdir -p data/cache data/logs data/sessions /var/log/sigec \
-    && chown -R www-data:www-data data/ /var/log/sigec \
-    && chmod -R 775 data/ /var/log/sigec
+    && chown -R www-data:www-data /var/www /var/log/sigec \
+    && chmod -R 775 /var/www/data /var/log/sigec
 
 # ─── Entrypoint ──────────────────────────────────────────────────────────────
 COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
