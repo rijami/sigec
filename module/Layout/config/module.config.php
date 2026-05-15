@@ -47,7 +47,7 @@ return [
         'template_path_stack' => [
             __DIR__ . '/../view',
         ],
-        'base_path' => '/sigec/public/',
-        'base_url' => '/sigec/'
+        'base_path' => '/',
+        'base_url' => '/'
     ],
 ];
